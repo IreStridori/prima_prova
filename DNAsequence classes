@@ -1,14 +1,14 @@
 class Sequence:
-    def __init__(self, sequence):
-        self.sequence = sequence
+    def __init__(self, sequence): #c'è ancora da capire il tipo di questa variabile, ne parliamo poi assieme
+        self.__sequence = sequence
 
     def length(self):
-        return len(self.sequence)
+        return len(self.__sequence)
 
 class DNASequence(Sequence):
     def gc_content(self):
-        gc_count = self.sequence.count("G") + self.sequence.count("C")
-        return (gc_count / len(self.sequence)) * 100 if self.sequence else 0.0
+        gc_count = self.__sequence.count("G") + self.__sequence.count("C")
+        return (gc_count / len(self.__sequence)) * 100 if self.__sequence else 0.0
 
     def extract_subsequence(self, start, end):
         """
@@ -19,7 +19,7 @@ class DNASequence(Sequence):
         :return: La sottosequenza estratta come stringa.
         :raises ValueError: Se gli indici sono fuori dai limiti.
         """
-        if start < 0 or end > len(self.sequence) or start >= end:
+        if start < 0 or end > len(self.__sequence) or start >= end:
             raise ValueError("Gli indici forniti sono invalidi.")
-        return self.sequence[start:end]
+        return self.__sequence[start:end]
 
