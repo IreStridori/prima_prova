@@ -1,0 +1,49 @@
+class Sequence:
+    def __init__(self, sequence):
+        self.sequence = sequence
+
+    def length(self):
+        return len(self.sequence)
+
+class DNASequence(Sequence):
+    def gc_content(self):
+        gc_count = self.sequence.count("G") + self.sequence.count("C")
+        return (gc_count / len(self.sequence)) * 100 if self.sequence else 0.0
+
+    def extract_subsequence(self, start, end):
+        """
+        Estrae una sottosequenza dalla sequenza DNA.
+        
+        :param start: Indice iniziale (inclusivo).
+        :param end: Indice finale (esclusivo).
+        :return: La sottosequenza estratta come stringa.
+        :raises ValueError: Se gli indici sono fuori dai limiti.
+        """
+        if start < 0 or end > len(self.sequence) or start >= end:
+            raise ValueError("Gli indici forniti sono invalidi.")
+        return self.sequence[start:end]
+
+class MotifAnalyser:
+    def __init__(self, sequences):
+        self.sequences = sequences
+
+    def search_motif(self, motif):
+        results = []
+        for idx in range(len(self.sequences)):  # Uso esplicito degli indici
+            seq = self.sequences[idx]
+            positions = []
+            start = 0
+            while (start := seq.find(motif, start)) != -1:
+                positions.append(start)
+                start += 1
+            results.append({"Sequence Index": idx, "Motif Positions": positions})
+        return results
+
+class SequenceAligner:
+    def __init__(self, seq1, seq2):
+        self.seq1 = seq1
+        self.seq2 = seq2
+
+    def align(self):
+        alignments = pairwise2.align.globalxx(self.seq1, self.seq2)
+        return alignments
