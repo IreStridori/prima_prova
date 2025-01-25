@@ -1,0 +1,16 @@
+class MotifAnalyser:
+    def __init__(self, sequences):
+        self.sequences = sequences
+
+    def search_motif(self, motif):
+        results = []
+        for idx in range(len(self.sequences)):  # Uso esplicito degli indici
+            seq = self.sequences[idx]
+            positions = []
+            start = 0
+            while (start := seq.find(motif, start)) != -1:
+                positions.append(start)
+                start += 1
+            results.append({"Sequence Index": idx, "Motif Positions": positions})
+        return results
+
