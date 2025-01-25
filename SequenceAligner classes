@@ -1,0 +1,8 @@
+class SequenceAligner:
+    def __init__(self, seq1, seq2):
+        self.seq1 = seq1
+        self.seq2 = seq2
+
+    def align(self):
+        alignments = pairwise2.align.globalxx(self.seq1, self.seq2)
+        return alignments
