@@ -12,8 +12,8 @@ class DataManager(ABC):
         pass
 
 # Sottoclasse concreta DataFrameManager
-class DataFrameManager(DataManager):
-    def __init__(self, dataframe):
+class FastaDataFrameManager(DataManager):  #aggiungerei FASTA così ha senso che io abbia dei metodi per gettare la sequence 
+    def __init__(self, dataframe): #il dataframe qua viene dalla classe parser
         self.__dataframe = dataframe  # Attributo privato
 
     def get_data(self):
