@@ -1,11 +1,18 @@
 class Sequence:
-    def __init__(self, sequence): #c'è ancora da capire il tipo di questa variabile, ne parliamo poi assieme
+    def __init__(self, sequence): 
         self.__sequence = sequence
 
     def length(self):
         return len(self.__sequence)
 
+    def get_seq (self):
+        return self.__sequence
+
+    def set_seq(self, new_seq):
+        self.__sequence = new_seq
+
 class DNASequence(Sequence):
+
     def gc_content(self):
         gc_count = self.__sequence.count("G") + self.__sequence.count("C")
         return (gc_count / len(self.__sequence)) * 100 if self.__sequence else 0.0
