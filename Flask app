@@ -24,7 +24,7 @@ def upload():
 
     parser = FastaParser()
     parser.parse(uploaded_data_path)  # Parsing dal file salvato, ma ritornando None non posso scrivere fasta_data = lui, quindi chiamo solo la funzione 
-    fasta_data = parser.get_DataFrame
+    fasta_data = parser.get_DataFrame # è un DataFrame 
     return redirect(url_for("stats"))
 
 
