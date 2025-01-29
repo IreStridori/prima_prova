@@ -1,0 +1,106 @@
+index.html (Pagina principale - Upload del file)
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload FASTA</title>
+</head>
+<body>
+    <h1>Upload a FASTA File</h1>
+
+    <!-- Messaggi di errore o conferma -->
+    <p>{{ message }}</p>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".fasta">
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+
+stats.html (Statistiche delle sequenze)
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>FASTA Stats</title>
+</head>
+<body>
+    <h1>FASTA Sequence Statistics</h1>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Length</th>
+            <th>GC Content</th>
+        </tr>
+        {% for s in stats %}
+        <tr>
+            <td>{{ s.ID }}</td>
+            <td>{{ s.Description }}</td>
+            <td>{{ s.Length }}</td>
+            <td>{{ s["GC Content"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
+</body>
+</html>
+
+
+motif.html (Ricerca di un motif)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motif Search</title>
+</head>
+<body>
+    <h1>Search for a Motif</h1>
+
+    <p>{{ message }}</p>
+
+    <form action="/motif" method="post">
+        <input type="text" name="motif" placeholder="Enter motif">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if results %}
+    <h2>Results</h2>
+    <ul>
+        {% for r in results %}
+        <li>{{ r }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
+
+
+align.html (Allineamento sequenze)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sequence Alignment</title>
+</head>
+<body>
+    <h1>Align Sequences</h1>
+
+    <p>{{ message }}</p>
+
+    <form action="/align" method="post">
+        <input type="number" name="seq1" placeholder="Sequence 1 index">
+        <input type="number" name="seq2" placeholder="Sequence 2 index">
+        <button type="submit">Align</button>
+    </form>
+
+    {% if alignment_result %}
+    <h2>Alignment Result</h2>
+    <pre>{{ alignment_result }}</pre>
+    {% endif %}
+</body>
+</html>
