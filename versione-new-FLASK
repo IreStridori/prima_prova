@@ -1,229 +1,161 @@
-Secondo il documento della Project Specification, l’interfaccia web deve permettere agli utenti di interagire con il sistema di analisi genomica attraverso le seguenti funzionalità principali:
-	1.	Caricamento di un file FASTA:
-	•	L’utente deve essere in grado di caricare un file FASTA che contiene sequenze di DNA mitocondriale.
-	•	Il sistema deve processare e memorizzare il dataset per consentire analisi successive.
-	2.	Visualizzazione di statistiche:
-	•	Mostrare un riepilogo statistico delle sequenze caricate, inclusi:
-	•	Distribuzione della lunghezza delle sequenze.
-	•	Contenuto di GC per ciascuna sequenza.
-	•	Possibilità di rappresentare i dati attraverso tabelle e/o grafici.
-	3.	Ricerca di motivi genetici (motifs):
-	•	Consentire agli utenti di cercare un motivo genetico specifico (es. “ATG”) all’interno delle sequenze caricate.
-	•	Visualizzare i risultati della ricerca, come:
-	•	Numero di occorrenze per ciascuna sequenza.
-	•	Posizioni dei motivi trovati (opzionale).
-	4.	Esplorazione dei risultati degli allineamenti:
-	•	Permettere agli utenti di selezionare due sequenze e visualizzarne l’allineamento:
-	•	Allineamento globale (Needleman-Wunsch).
-	•	Allineamento locale (Smith-Waterman).
-	•	Visualizzare i punteggi di allineamento e i dettagli (es. sequenze allineate con gap).
-	5.	Visualizzazioni interattive:
-	•	Supportare grafici e tabelle interattive per esplorare i dati:
-	•	Grafici della distribuzione della lunghezza delle sequenze.
-	•	Heatmap o istogrammi per la distribuzione del GC content.
-	•	Evidenziazione grafica dei motivi trovati.
-
-
-Struttura delle pagine web
-
-Una possibile struttura per l’interfaccia web è:
-	1.	Pagina iniziale (Home):
-Introduzione all’applicazione con un pulsante per caricare un file FASTA.
-	2.	Pagina di analisi:
-	•	Sezione statistiche: Mostra il riepilogo delle statistiche delle sequenze.
-	•	Sezione motivi: Form per inserire un motivo genetico da cercare.
-	•	Sezione allineamenti: Form per selezionare due sequenze e visualizzare i risultati dell’allineamento.
-	3.	Pagina risultati:
-Visualizza i risultati delle analisi, come:
-	•	Tabelle di statistiche.
-	•	Risultati delle ricerche di motivi.
-	•	Dettagli degli allineamenti.
-
-Ecco un’implementazione di base per l’interfaccia web con Flask, seguendo le specifiche del progetto.
-
-Struttura del progetto Flask
-
-Ecco come organizzare i file:
-project/
-├── app.py
-├── templates/
-│   ├── base.html
-│   ├── index.html
-│   ├── results.html
-│   ├── alignment.html
-├── static/
-│   ├── styles.css
-├── uploads/
-│   └── (file FASTA caricati)
-├── services/
-│   ├── fasta_parser.py
-│   ├── dna_analysis.py
-│   ├── motif_analysis.py
-│   ├── sequence_alignment.py
-
-Codice Flask
-app.py
-
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
-from services.fasta_parser import FastaParser
-from services.motif_analysis import MotifAnalysis
-from services.sequence_alignment import SequenceAlignment
+from file_processor import FastaParser, DNASequence, MotifAnalyser, SequenceAligner
 
-app = Flask(__name__)
-app.secret_key = "your_secret_key"
-UPLOAD_FOLDER = "uploads"
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+"""•	Flask → Framework per creare applicazioni web
+	•	render_template → Per generare pagine HTML
+	•	request → Per gestire input dell’utente (es. file o form)
+	•	redirect, url_for → Per reindirizzare l’utente
+	•	session → Memorizza i dati temporaneamente (senza usare variabili globali)
+	•	flash → Mostra messaggi di errore o conferma
+	•	os → Per gestire file e cartelle
+	•	file_processor → Modulo che contiene le classi per elaborare i file FASTA"""
 
-# Istanza globale del parser
-fasta_parser = FastaParser()
+app = Flask(__name__) #crea flask app
+app.secret_key = "supersecretkey"  # Necessario per usare sessioni
+
+UPLOAD_FOLDER = "uploads" #indica dove salvare i files
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Assicura che la cartella esista, se non esiste la crea
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER #salva la configurazione
 
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html") #carica un file
 
 
 @app.route("/upload", methods=["POST"])
-def upload_file():
-    if "file" not in request.files:
-        flash("Nessun file selezionato.")
+def upload():
+    if "file" not in request.files: 
+        flash("No file part", "error")
         return redirect(url_for("index"))
 
     file = request.files["file"]
+    
     if file.filename == "":
-        flash("Nessun file selezionato.")
+        flash("No file selected!", "error")
         return redirect(url_for("index"))
 
-    # Salva il file
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
-    file.save(file_path)
-
-    # Parsing del file FASTA
-    fasta_parser.parse_fasta(file_path)
-    flash(f"File {file.filename} caricato con successo!")
-    return redirect(url_for("results"))
-
-
-@app.route("/results")
-def results():
-    # Ottieni il riepilogo delle sequenze
-    if fasta_parser.data is None:
-        flash("Carica un file FASTA prima di accedere ai risultati.")
+    if not file.filename.endswith(".fasta"):
+        flash("Invalid file format! Please upload a .fasta file.", "error")
         return redirect(url_for("index"))
 
-    summary = fasta_parser.get_summary()
-    sequences = fasta_parser.data.to_dict(orient="records")
-    return render_template("results.html", summary=summary, sequences=sequences)
+    # Salva il file sempre con lo stesso nome
+    filepath = os.path.join(app.config["UPLOAD_FOLDER"], "uploaded_file.fasta")
+    file.save(filepath)
+
+    # Analizza il file con la classe FastaParser
+    parser = FastaParser()
+    parser.parse(filepath)
+    
+    session["uploaded_data_path"] = filepath  # Salviamo il percorso nella sessione
+    session["fasta_data"] = parser.get_DataFrame().to_json()  # Salviamo i dati (convertiti in JSON)
+
+    flash("File uploaded and processed successfully!", "success")
+    return redirect(url_for("stats"))
+
+"""1.	Controlla se è stato inviato un file
+	2.	Verifica che il file abbia estensione .fasta
+	3.	Salva il file in uploads/uploaded_file.fasta
+	4.	Usa FastaParser per analizzare il file
+	5.	Salva i dati nella session:
+	•	Percorso del file (uploaded_data_path)
+	•	Dati della sequenza convertiti in JSON (fasta_data)
+	6.	Mostra un messaggio di conferma (flash) e reindirizza a /stats"""
 
 
-@app.route("/motif", methods=["POST"])
-def search_motif():
-    motif = request.form.get("motif")
-    if not motif:
-        flash("Inserisci un motivo valido.")
-        return redirect(url_for("results"))
+@app.route("/stats")
+def stats():
+    if "fasta_data" not in session:
+        flash("No data available. Please upload a file first.", "error")
+        return redirect(url_for("index"))
 
-    motif_analyzer = MotifAnalysis(fasta_parser)
-    results = motif_analyzer.find_motif(motif)
-    return render_template("results.html", motif_results=results.to_dict(orient="records"))
+    import pandas as pd
+    fasta_data = pd.read_json(session["fasta_data"])
 
+    stats = []
+    for _, row in fasta_data.iterrows():
+        dna_seq = DNASequence(row["Sequence"])
+        stats.append({
+            "ID": row["ID"],
+            "Description": row["Description"],
+            "Length": dna_seq.length(),
+            "GC Content": f"{dna_seq.gc_content():.2f}%"
+        })
 
-@app.route("/alignment", methods=["POST"])
-def alignment():
-    seq1_id = request.form.get("seq1")
-    seq2_id = request.form.get("seq2")
-    if not seq1_id or not seq2_id:
-        flash("Seleziona due sequenze valide.")
-        return redirect(url_for("results"))
+    return render_template("stats.html", stats=stats)
+"""1.	Controlla se esistono dati nella session, altrimenti reindirizza l’utente alla homepage
+	2.	Converte il JSON salvato in un DataFrame Pandas
+	3.	Calcola statistiche su ogni sequenza (lunghezza, GC content)
+	4.	Mostra i dati nella pagina stats.html"""
 
-    # Trova le sequenze per ID
-    seq1 = fasta_parser.data.loc[fasta_parser.data["Identifier"] == seq1_id, "Sequence"].values[0]
-    seq2 = fasta_parser.data.loc[fasta_parser.data["Identifier"] == seq2_id, "Sequence"].values[0]
+@app.route("/motif", methods=["GET", "POST"])
+def motif():
+    if "fasta_data" not in session:
+        flash("No data available. Please upload a file first.", "error")
+        return redirect(url_for("index"))
 
-    # Esegui l'allineamento
-    aligner = SequenceAlignment(seq1, seq2)
-    global_alignments = aligner.global_alignment()
-    local_alignments = aligner.local_alignment()
+    import pandas as pd
+    fasta_data = pd.read_json(session["fasta_data"])
 
-    return render_template("alignment.html", global_alignments=global_alignments, local_alignments=local_alignments)
+    results = None
+    motif = None
 
+    if request.method == "POST":
+        motif = request.form.get("motif")
+        if not motif:
+            flash("Please enter a motif to search for.", "error")
+            return redirect(url_for("motif"))
+
+        analyser = MotifAnalyser(fasta_data["Sequence"].tolist())
+        results = analyser.search_motif(motif)
+
+    return render_template("motif.html", results=results, motif=motif)
+"""	•	Se l’utente inserisce un “motif”, cerca il pattern nelle sequenze
+	•	Mostra i risultati in motif.html"""
+
+@app.route("/align", methods=["GET", "POST"])
+def align():
+    if "fasta_data" not in session:
+        flash("No data available. Please upload a file first.", "error")
+        return redirect(url_for("index"))
+
+    import pandas as pd
+    fasta_data = pd.read_json(session["fasta_data"])
+
+    alignment_result = None
+    seq1_index = None
+    seq2_index = None
+
+    if request.method == "POST":
+        try:
+            seq1_index = int(request.form.get("seq1", -1))
+            seq2_index = int(request.form.get("seq2", -1))
+
+            if seq1_index < 0 or seq2_index < 0 or seq1_index >= len(fasta_data) or seq2_index >= len(fasta_data):
+                flash("Invalid sequence selection. Please try again.", "error")
+                return redirect(url_for("align"))
+
+            seq1 = fasta_data.iloc[seq1_index]["Sequence"]
+            seq2 = fasta_data.iloc[seq2_index]["Sequence"]
+
+            aligner = SequenceAligner(seq1, seq2)
+            alignment_result = aligner.align()[0]  # Prendi il miglior allineamento
+
+        except ValueError:
+            flash("Invalid input. Please select valid sequences.", "error")
+            return redirect(url_for("align"))
+
+    return render_template(
+        "align.html",
+        alignment_result=alignment_result,
+        fasta_data=fasta_data,
+        seq1_index=seq1_index,
+        seq2_index=seq2_index
+    )
+"""	•	L’utente sceglie due sequenze da allineare
+	•	Usa SequenceAligner per calcolare l’allineamento
+	•	Mostra i risultati in align.html"""
 
 if __name__ == "__main__":
-    if not os.path.exists(UPLOAD_FOLDER):
-        os.makedirs(UPLOAD_FOLDER)
     app.run(debug=True)
-
-      
-Template HTML
-
-templates/base.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Genomic Analysis</title>
-    <link rel="stylesheet" href="/static/styles.css">
-</head>
-<body>
-    <header>
-        <h1>Genomic Analysis Tool</h1>
-    </header>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-</body>
-</html>
-
-templates/index.html
-
-{% extends "base.html" %}
-
-{% block content %}
-<h2>Carica un file FASTA</h2>
-<form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" accept=".fasta">
-    <button type="submit">Carica</button>
-</form>
-{% endblock %}
-
-templates/results.html
-
-{% extends "base.html" %}
-
-{% block content %}
-<h2>Risultati del dataset</h2>
-
-<h3>Statistiche</h3>
-<p>{{ summary }}</p>
-
-<h3>Ricerca Motivi</h3>
-<form action="/motif" method="post">
-    <label for="motif">Motivo:</label>
-    <input type="text" name="motif" required>
-    <button type="submit">Cerca</button>
-</form>
-
-{% if motif_results %}
-    <h4>Risultati Motivi:</h4>
-    <ul>
-    {% for result in motif_results %}
-        <li>ID: {{ result.Identifier }}, Motivo: {{ result.Motif }}, Occorrenze: {{ result.Occurrences }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
-{% endblock %}
-
-templates/alignment.html
-
-{% extends "base.html" %}
-
-{% block content %}
-<h2>Allineamento Sequenze</h2>
-<h3>Globale</h3>
-<pre>{{ global_alignments }}</pre>
-<h3>Locale</h3>
-<pre>{{ local_alignments }}</pre>
-{% endblock %}
