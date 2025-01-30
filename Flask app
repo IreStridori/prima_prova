@@ -3,7 +3,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    return 
+    return "Hello, Flask!"
 
 # Variabili globali per i dati caricati
 uploaded_data_path = None
