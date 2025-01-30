@@ -1,10 +1,16 @@
 # Flask app
 app = Flask(__name__)
 
+@app.route("/")
+def main():
+    return 
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 # Variabili globali per i dati caricati
 uploaded_data_path = None
 fasta_data = None
-
 
 @app.route("/")
 def index():
@@ -91,7 +97,3 @@ def align():
         seq1_index=seq1_index,
         seq2_index=seq2_index
     )
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
