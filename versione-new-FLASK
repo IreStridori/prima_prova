@@ -41,8 +41,11 @@ def upload():
         return redirect(url_for("index"))
 
     # Salva il file sempre con lo stesso nome
-    filepath = os.path.join(app.config["UPLOAD_FOLDER"], "uploaded_file.fasta")
-    file.save(filepath)
+
+    if file:
+        filename = secure_filename(file.filename) #aggiunte per vedere se così mi uploada il file
+    	filepath = os.path.join(app.config["UPLOAD_FOLDER"], "uploaded_file.fasta")
+    	file.save(filepath)
 
     # Analizza il file con la classe FastaParser
     parser = FastaParser()
