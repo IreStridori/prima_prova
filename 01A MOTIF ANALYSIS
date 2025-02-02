@@ -1,0 +1,15 @@
+# Classe per l'analisi dei motivi genetici
+class MotifAnalysis:
+    def __init__(self, fasta_parser):
+        self.fasta_parser = fasta_parser
+
+    def find_motif(self, motif):
+        """Cerca un motivo genetico specifico in tutte le sequenze."""
+        results = []
+        for _, row in self.fasta_parser.iterrows():
+            count = row["Sequence"].count(motif)
+            results.append((row["Identifier"], motif, count))
+        return pd.DataFrame(results, columns=["Identifier", "Motif", "Occurrences"])
+    
+try_MotAnal=MotifAnalysis(DataFrame) #dove DataFrame è il dataframe creato con FastaParser e gettato attraverso il metodo get
+print(try_MotAnal.find_motif('TATA'))
