@@ -25,6 +25,7 @@ class MitochondrialDNA(GenomicEntity):
         c_count = self._sequence.count("C")
         return (g_count + c_count) / len(self._sequence) * 100
 
+'''PROVANDO I VARI METODI'''
 try_mitoDNA=MitochondrialDNA(DataFrame, 3)
 print(try_mitoDNA.get_attributes_value())
 print('the length of the seq is:', try_mitoDNA.length())
