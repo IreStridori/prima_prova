@@ -2,21 +2,21 @@
 class SequenceAlignment:
     def __init__(self, seq1, seq2):
         """Inizializza l'oggetto di allineamento con due sequenze."""
-        self.seq1 = str(seq1)
-        self.seq2 = str(seq2)
-        self.aligner = PairwiseAligner()
-        self.aligner.mode = 'global'  # Imposta l'allineamento globale di default
+        self.__seq1 = seq1
+        self.__seq2 = seq2
+        self.__aligner = PairwiseAligner()
+        self.__aligner.mode = 'global'  # Imposta l'allineamento globale di default
 
     def global_alignment(self):
         """Esegue l'allineamento globale utilizzando il metodo di Needleman-Wunsch."""
-        self.aligner.mode = 'global'
-        alignments = self.aligner.align(self.seq1, self.seq2)
+        self.__aligner.mode = 'global'
+        alignments = self.__aligner.align(self.__seq1, self.__seq2)
         return alignments
 
     def local_alignment(self):
         """Esegue l'allineamento locale utilizzando il metodo di Smith-Waterman."""
-        self.aligner.mode = 'local'
-        alignments = self.aligner.align(self.seq1, self.seq2)
+        self.__aligner.mode = 'local'
+        alignments = self.__aligner.align(self.__seq1, self.__seq2)
         return alignments
 
     def format_alignment(self, alignments, n=1):
