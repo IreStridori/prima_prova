@@ -24,6 +24,7 @@ class FastaParser:
             line = line.strip()
             if line.startswith(">"):
                 sequences.append((identifier, description, sequence))
+                sequence=''
                 header_parts = line[1:].split(" ", 1)
                 identifier = header_parts[0]
                 description = header_parts[1] if len(header_parts) > 1 else ""
@@ -48,7 +49,9 @@ class FastaParser:
 
 '''PROVANDO I VARI METODI'''    
 try_fasta_parser=FastaParser()
-try_fasta_parser.parse_fasta('example2.fasta')
-try_fasta_parser.get_DataFrame()
+try_fasta_parser.parse_fasta('example.fasta')
+DataFrame=try_fasta_parser.get_DataFrame()
 print(try_fasta_parser.get_summary())
 try_fasta_parser.print_DataFrame()
+
+print('the sequence of the second row is long', len(DataFrame.loc[99, 'Sequence']))
