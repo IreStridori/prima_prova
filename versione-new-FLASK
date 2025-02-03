@@ -48,9 +48,10 @@ def upload():
     	file.save(filepath)
 
     # Analizza il file con la classe FastaParser
-    parser = FastaParser()
-    parser.parse(filepath)
-    
+    parser = FastaParser() #istanza della classe
+    parser.parse_fasta(filepath) #qua vorrebbe un file, crea il file ma il metodo ritorna none
+    df.fasta=parser.get_DataFrame() #DataFrame del parserd file
+
     session["uploaded_data_path"] = filepath  # Salviamo il percorso nella sessione
     session["fasta_data"] = parser.get_DataFrame().to_json()  # Salviamo i dati (convertiti in JSON)
 
@@ -77,14 +78,14 @@ def stats():
     fasta_data = pd.read_json(session["fasta_data"])
 
     stats = []
-    for _, row in fasta_data.iterrows():
-        dna_seq = DNASequence(row["Sequence"])
-        stats.append({
-            "ID": row["ID"],
-            "Description": row["Description"],
-            "Length": dna_seq.length(),
-            "GC Content": f"{dna_seq.gc_content():.2f}%"
-        })
+for i in range(len(pd.parser)): #la length è del dataframe
+    dna_seq = MitochondrialDNA(*parser.get_seq_info(i)) #ma le info sono un metodo  della classe
+    
+    stats.append({
+        "ID": dna_seq.get_attributes_value()[0] ,
+        "Description": dna_seq.get_attributes_value()[1],
+        "Length": dna_seq.length(),
+        "GC Content": f"{dna_seq.gc_content():.2f}%"})
 
     return render_template("stats.html", stats=stats)
 """1.	Controlla se esistono dati nella session, altrimenti reindirizza l’utente alla homepage
@@ -110,8 +111,8 @@ def motif():
             flash("Please enter a motif to search for.", "error")
             return redirect(url_for("motif"))
 
-        analyser = MotifAnalyser(fasta_data["Sequence"].tolist())
-        results = analyser.search_motif(motif)
+        analyser = MotifAnalyser(pd.fasta) #per istanziare la classe bisogna dargli un dataframe
+        results = analyser.find_motif(motif) #il metodo vuole solo il motivo
 
     return render_template("motif.html", results=results, motif=motif)
 """	•	Se l’utente inserisce un “motif”, cerca il pattern nelle sequenze
