@@ -50,7 +50,6 @@ def upload():
     # Analizza il file con la classe FastaParser
     parser = FastaParser() #istanza della classe
     parser.parse_fasta(filepath) #qua vorrebbe un file, crea il file ma il metodo ritorna none
-    df.fasta=parser.get_DataFrame() #DataFrame del parserd file
 
     session["uploaded_data_path"] = filepath  # Salviamo il percorso nella sessione
     session["fasta_data"] = parser.get_DataFrame().to_json()  # Salviamo i dati (convertiti in JSON)
@@ -78,8 +77,9 @@ def stats():
     fasta_data = pd.read_json(session["fasta_data"])
 
     stats = []
-for i in range(len(pd.parser)): #la length è del dataframe
-    dna_seq = MitochondrialDNA(*parser.get_seq_info(i)) #ma le info sono un metodo  della classe
+for i in range(len(fasta_data)): #la length è del dataframe
+    info=fasta_data.iloc[i]
+    dna_seq = MitochondrialDNA(*info.tolist()) #ma le info sono un metodo  della classe
     
     stats.append({
         "ID": dna_seq.get_attributes_value()[0] ,
@@ -143,7 +143,7 @@ def align():
             seq1 = parser.get_seq(seq1_index)
             seq2 = parser.get_seq(seq2_index)
 
-            aligner = SequenceAligner(seq1, seq2)
+            aligner = SequenceAlignment(seq1, seq2)
             alignment_result = aligner.perform_alignement()
 
         except ValueError:
