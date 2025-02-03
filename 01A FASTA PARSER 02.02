@@ -1,6 +1,3 @@
-import pandas as pd
-from abc import ABC, abstractmethod
-
 # Classe per il parsing del file FASTA
 class FastaParser:
     def __init__(self):
@@ -46,12 +43,19 @@ class FastaParser:
     def get_summary(self):
         """Restituisce un riepilogo del dataset."""
         return self.__data.describe(include="all")
-
-'''PROVANDO I VARI METODI'''    
+    
+    def get_seq(self, index):
+        seq= self.__data.iloc[index]
+        return seq.tolist()
+        
+    
 try_fasta_parser=FastaParser()
 try_fasta_parser.parse_fasta('example.fasta')
 DataFrame=try_fasta_parser.get_DataFrame()
 print(try_fasta_parser.get_summary())
 try_fasta_parser.print_DataFrame()
+print(try_fasta_parser.get_seq(3))
 
 print('the sequence of the second row is long', len(DataFrame.loc[99, 'Sequence']))
+spacer= '-'*135
+print(spacer)
