@@ -1,15 +1,33 @@
 # Classe per l'analisi dei motivi genetici
-class MotifAnalysis:
-    def __init__(self, fasta_parser):
-        self.__fasta_parser = fasta_parser
-
+HO AGGIUNTO UNA CLASSE ASTRATTA PERCHè POTREI NON VOLER LAVORARE CON UN DATA FRAME MA CON UNA STRINGA, O QUALSIASI COSA, QUINDI FACCIAMO IN MODO CHE IL NOSTRO SIA UN CASO PARTICOLARE
+class MotifAnalyser(ABC):
+    def __init__(self, data):
+        self.__data = data
+        
+    @abstractmethod
+    def find_motif(self, motif):
+        pass
+    
+class SequenceMotif(MotifAnalyser):
+    def __init__(self, DataFrame): #accetta un dataframe
+        self.__DataFrame = DataFrame
+    
+    def count_motif(self, motif, seq):
+        '''conta quante volte in una singola sequenza ci sia il motivo'''
+        motif=motif.upper()
+        return seq.count(motif)
+        
+    
     def find_motif(self, motif):
         """Cerca un motivo genetico specifico in tutte le sequenze."""
+        motif=motif.upper()
         results = []
-        for _, row in self.__fasta_parser.iterrows():
+        for _, row in self.__DataFrame.iterrows():
             count = row["Sequence"].count(motif)
             results.append((row["Identifier"], motif, count))
         return pd.DataFrame(results, columns=["Identifier", "Motif", "Occurrences"])
     
-try_MotAnal=MotifAnalysis(DataFrame) #dove DataFrame è il dataframe creato con FastaParser e gettato attraverso il metodo get
-print(try_MotAnal.find_motif('TATA'))
+try_MotAnal=SequenceMotif(DataFrame) #dove DataFrame è il dataframe creato con FastaParser e gettato attraverso il metodo get
+print(try_MotAnal.count_motif('ACAT'))
+print(try_MotAnal.find_motif_seq('acat', DataFrame.loc[99, 'Sequence']))
+print(spacer)
