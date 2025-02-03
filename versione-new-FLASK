@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
-from file_processor import FastaParser, DNASequence, MotifAnalyser, SequenceAligner
+from file_processor import FastaParser, MitochondrialDNA, MotifAnalyser, SequenceAlignment
 
 """•	Flask → Framework per creare applicazioni web
 	•	render_template → Per generare pagine HTML
