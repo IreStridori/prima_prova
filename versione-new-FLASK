@@ -140,11 +140,11 @@ def align():
                 flash("Invalid sequence selection. Please try again.", "error")
                 return redirect(url_for("align"))
 
-            seq1 = fasta_data.iloc[seq1_index]["Sequence"]
-            seq2 = fasta_data.iloc[seq2_index]["Sequence"]
+            seq1 = parser.get_seq(seq1_index)
+            seq2 = parser.get_seq(seq2_index)
 
             aligner = SequenceAligner(seq1, seq2)
-            alignment_result = aligner.align()[0]  # Prendi il miglior allineamento
+            alignment_result = aligner.perform_alignement()
 
         except ValueError:
             flash("Invalid input. Please select valid sequences.", "error")
