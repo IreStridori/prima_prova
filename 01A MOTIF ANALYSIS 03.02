@@ -36,3 +36,9 @@ try_MotAnal=SequenceMotif(DataFrame) #dove DataFrame è il dataframe creato con 
 print(try_MotAnal.count_motif('ACAT'))
 print(try_MotAnal.find_motif_seq('acat', DataFrame.loc[99, 'Sequence']))
 print(spacer)
+
+
+motif_finder=SequenceMotif(DataFrame)
+seq =DataFrame.loc[3,  'Sequence']
+extracted_motif6=motif_finder.extract_motifs(seq, 3)
+print(motif_finder.return_motifs(extracted_motif6, 20))
