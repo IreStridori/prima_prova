@@ -12,12 +12,17 @@ class SequenceMotif(MotifAnalyser):
     def __init__(self, DataFrame): #accetta un dataframe
         self.__DataFrame = DataFrame
     
-    def count_motif(self, motif, seq):
-        '''conta quante volte in una singola sequenza ci sia il motivo'''
-        motif=motif.upper()
-        return seq.count(motif)
+    def extract_motifs(self, sequence, motif_length):
+'''questo metodo ritorna una lista di motivi di una data lungezza trovati in una data sequenza'''
+    return [sequence[i:i+motif_length] for i in range(len(sequence) - motif_length + 1)]
+
+    def return_motifs(self, extracted_motifs, minimum):
+      motifs =extracted_motifs
+      motif_counts = dict(Counter(motifs))
+      recurrent_motifs = {motif: count for motif, count in motif_counts.items() if count > minimum}
+      motifs_df=df = pd.DataFrame(list(recurrent_motifs.items()), columns=["motif", "count"]).set_index("motif")
+      return motifs_df
         
-    
     def find_motif(self, motif):
         """Cerca un motivo genetico specifico in tutte le sequenze."""
         motif=motif.upper()
