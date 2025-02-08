@@ -1,3 +1,4 @@
+from Bio.Align import PairwiseAligner
 # Classe per l'allineamento
 class SequenceAlignment:
     def __init__(self, seq1, seq2):
