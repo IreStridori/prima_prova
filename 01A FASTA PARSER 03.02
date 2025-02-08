@@ -24,7 +24,7 @@ class FastaParser:
             return func(self, *args, **kwargs)
         return wrapper
 
-    def parse_file(self, file):
+    def parse_file(self, file: str) -> None:
         """Effettua il parsing del file FASTA e memorizza i dati in un DataFrame."""
         sequences = []
         f = open(file, "r")
