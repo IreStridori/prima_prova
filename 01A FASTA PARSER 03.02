@@ -1,5 +1,14 @@
 import pandas as pd
 
+class FileParser(ABC):
+     def __init__(self):
+        self._data = None
+        
+    @abstractmethod
+    def parse_file(self, file):
+        pass
+
+
 # Classe per il parsing del file FASTA
 class FastaParser:
 
