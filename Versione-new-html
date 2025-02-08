@@ -1,6 +1,6 @@
 index.html (Pagina principale - Upload del file)
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Upload FASTA</title>
@@ -8,20 +8,18 @@ index.html (Pagina principale - Upload del file)
 <body>
     <h1>Upload a FASTA File</h1>
 
-    <!-- Messaggi di errore o conferma -->
-    <p>{{ message }}</p>
-
     <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="file" accept=".fasta">
         <button type="submit">Upload</button>
     </form>
+    <p>Go back to the <a href="/">home page</a>.</p>
 </body>
 </html>
 
 
 stats.html (Statistiche delle sequenze)
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>FASTA Stats</title>
@@ -33,6 +31,7 @@ stats.html (Statistiche delle sequenze)
         <tr>
             <th>ID</th>
             <th>Description</th>
+            <th>Sequence</th>
             <th>Length</th>
             <th>GC Content</th>
         </tr>
@@ -40,13 +39,16 @@ stats.html (Statistiche delle sequenze)
         <tr>
             <td>{{ s.ID }}</td>
             <td>{{ s.Description }}</td>
+            <td>{{s.Sequence}} </td>
             <td>{{ s.Length }}</td>
             <td>{{ s["GC Content"] }}</td>
         </tr>
         {% endfor %}
     </table>
-
+	
+    <p> Would you like to do some more operations with your sequences? </p>
     <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
+    <p>Go back to the <a href="/">home page</a>.</p>
 </body>
 </html>
 
@@ -59,15 +61,19 @@ motif.html (Ricerca di un motif)
     <title>Motif Search</title>
 </head>
 <body>
-    <h1>Search for a Motif</h1>
-
-    <p>{{ message }}</p>
-
+    <h1>Search for a conserved Motif</h1>
+    <p> Do you have a known motif and want to know its statistics in the sequences of the dataset? </p>
     <form action="/motif" method="post">
         <input type="text" name="motif" placeholder="Enter motif">
         <button type="submit">Search</button>
     </form>
-
+    <br>
+     <p> If you don't, just insert: the sequence that you want to analyse, the length of the motif and the minimum of times that it has to be repeated </p>
+    <form action="/motif" method="post">
+        <input type="text" name="motif" placeholder="Enter: sequence, motif length, minimum">
+        <button type="submit">Search</button>
+    </form>
+    
     {% if results %}
     <h2>Results</h2>
     <ul>
@@ -76,6 +82,8 @@ motif.html (Ricerca di un motif)
         {% endfor %}
     </ul>
     {% endif %}
+    <p>Go back to the <a href="/FASTA Stats">statistics page</a>.</p>
+    <p>Go back to the <a href="/">home page</a>.</p>
 </body>
 </html>
 
@@ -102,5 +110,7 @@ align.html (Allineamento sequenze)
     <h2>Alignment Result</h2>
     <pre>{{ alignment_result }}</pre>
     {% endif %}
+    <p>Go back to the <a href="/FASTA Stats">statistics page</a>.</p>
+    <p>Go back to the <a href="/">home page</a>.</p>
 </body>
 </html>
