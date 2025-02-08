@@ -13,18 +13,18 @@ class FileParser(ABC):
 class FastaParser:
 
     def __init__(self):
-        self.__data = None
+        self._data = None
 
     @staticmethod  #forse così? così almeno come argomento gli va bene solo function
     # Decoratore per validare la presenza del dataset caricato
     def ensure_data_loaded(func):
         def wrapper(self, *args, **kwargs):
-            if self.__data == None:  # o si cambia come è scritto il decoratore oppure va messo dentro la classe perchè altrimenti non può accedere direttamente al self.__data; in ogni caso dove era stato messso a decorare un'altra funzione non andava bene
+            if self._data == None:  # o si cambia come è scritto il decoratore oppure va messo dentro la classe perchè altrimenti non può accedere direttamente al self.__data; in ogni caso dove era stato messso a decorare un'altra funzione non andava bene
                 raise ValueError("Nessun dataset caricato. Caricare un file FASTA prima di eseguire l'operazione.")
             return func(self, *args, **kwargs)
         return wrapper
 
-    def parse_fasta(self, file):
+    def parse_file(self, file):
         """Effettua il parsing del file FASTA e memorizza i dati in un DataFrame."""
         sequences = []
         f = open(file, "r")
@@ -45,23 +45,23 @@ class FastaParser:
         sequences.append((identifier, description, sequence)) #serve a riaggiornare le sequenze
 
         f.close()
-        self.__data = pd.DataFrame(sequences, columns=["Identifier", "Description", "Sequence"])
+        self._data = pd.DataFrame(sequences, columns=["Identifier", "Description", "Sequence"])
 
     """Restituisce il DataFrame contenente i dati FASTA."""
     def get_DataFrame(self):
-        return self.__data
+        return self._data
 
     @ensure_data_loaded #se i dati non sono stati caricati non verrà eseguito.
     def get_summary(self):
         """describe(include="all") restituisce un riepilogo del dataset.: numero di valori unici per ogni colonna, frequenza degli identificatori, lunghezza media delle sequenze"""
-        return self.__data.describe(include="all")
+        return self._data.describe(include="all")
 
     @ensure_data_loaded #aggiunto
     def get_seq(self, index):
         """Restituisce la sequenza e i dettagli della riga indicata."""
-        if index >= len(self.__data) or index < 0:
+        if index >= len(self._data) or index < 0:
             raise IndexError(f"Indice {index} fuori dai limiti).")
-        seq = self.__data.iloc[index].tolist()
+        seq = self._data.iloc[index].tolist()
         return seq
 
 
@@ -73,71 +73,4 @@ try_fasta_parser.print_DataFrame()
 print(try_fasta_parser.get_seq(3))
 
 print('the sequence of the second row is long', len(DataFrame.loc[99, 'Sequence']))
-spacer = '-' * 135
-print(spacer)
 
-------------------------
-# Classe per il parsing del file FASTA
-class FastaParser:
-    def __init__(self):
-        self.__data = None
-        
-        # Decoratore per validare la presenza del dataset caricato
-    def ensure_data_loaded(func): 
-        def wrapper(self, *args, **kwargs):
-            if self.__data is None: #o si cambia come è scritto il decoratore oppure va messo dentro la classe perchè altrimenti non può accedere direttamente al self.__data; in ogni caso dove era stato messso a decorare un'altra funzione non andava bene
-                raise ValueError("Nessun dataset caricato. Caricare un file FASTA prima di eseguire l'operazione.")
-            return func(self, *args, **kwargs)
-        return wrapper
-
-
-    def parse_fasta(self, file):
-        """Effettua il parsing del file FASTA e memorizza i dati in un DataFrame."""
-        sequences = []
-        f=open(file, "r")
-        identifier, description, sequence = None, None, ''
-        for line in f:
-            line = line.strip()
-            if line.startswith(">"):
-                sequences.append((identifier, description, sequence))
-                sequence=''
-                header_parts = line[1:].split(" ", 1)
-                identifier = header_parts[0]
-                description = header_parts[1] if len(header_parts) > 1 else ""
-            else:
-                sequence += line
-        sequences=sequences[1:]
-        sequences.append((identifier, description, sequence))
-                
-        f.close()
-        self.__data = pd.DataFrame(sequences, columns=["Identifier", "Description", "Sequence"])
-     
-    def get_DataFrame(self):
-        return self.__data
-        
-    def print_DataFrame(self):
-        print(self.__data)
-
-    @ensure_data_loaded
-    def get_summary(self):
-        """Restituisce un riepilogo del dataset."""
-        return self.__data.describe(include="all")
-    
-    def get_seq(self, index):
-        seq= self.__data.iloc[index]
-        return seq.tolist()
-        
-    
-try_fasta_parser=FastaParser()
-try_fasta_parser.parse_fasta('example.fasta')
-DataFrame=try_fasta_parser.get_DataFrame()
-print(try_fasta_parser.get_summary())
-try_fasta_parser.print_DataFrame()
-print(try_fasta_parser.get_seq(3))
-
-print('the sequence of the second row is long', len(DataFrame.loc[99, 'Sequence']))
-spacer= '-'*135
-
-
-
-print(spacer)
