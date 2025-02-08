@@ -1,0 +1,114 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload FASTA</title>
+</head>
+<body>
+    <h1>Upload a FASTA File</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".fasta" required>
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+<!-- stats.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FASTA Statistics</title>
+</head>
+<body>
+    <h1>FASTA Sequence Statistics</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Sequence</th>
+            <th>Length</th>
+            <th>GC Content</th>
+        </tr>
+        {% for s in stats %}
+        <tr>
+            <td>{{ s.ID }}</td>
+            <td>{{ s.Description }}</td>
+            <td>{{ s.Sequence[:50] }}...</td>
+            <td>{{ s.Length }}</td>
+            <td>{{ s["GC Content"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p>Additional Analysis:</p>
+    <a href="/motif">Search Motifs</a> | 
+    <a href="/align">Align Sequences</a> | 
+    <a href="/">Back to Home</a>
+</body>
+</html>
+
+<!-- motif.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Motif Analysis</title>
+</head>
+<body>
+    <h1>Motif Analysis</h1>
+
+    <h2>Search Known Motif</h2>
+    <form action="/motif" method="post">
+        <input type="text" name="known_motif" placeholder="Enter motif (e.g., TATA)">
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Find Recurring Motifs</h2>
+    <form action="/motif" method="post">
+        <p>Sequence Index: <input type="number" name="seq_index" min="0" required></p>
+        <p>Motif Length: <input type="number" name="motif_length" min="1" required></p>
+        <p>Minimum Occurrences: <input type="number" name="min_occurrences" min="1" required></p>
+        <button type="submit">Find Motifs</button>
+    </form>
+
+    {% if results %}
+    <h2>Results:</h2>
+    <pre>{{ results }}</pre>
+    {% endif %}
+
+    <p>
+        <a href="/stats">Back to Statistics</a> |
+        <a href="/">Back to Home</a>
+    </p>
+</body>
+</html>
+
+<!-- align.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sequence Alignment</title>
+</head>
+<body>
+    <h1>Sequence Alignment</h1>
+
+    <form action="/align" method="post">
+        <p>First Sequence Index: <input type="number" name="seq1" min="0" required></p>
+        <p>Second Sequence Index: <input type="number" name="seq2" min="0" required></p>
+        <button type="submit">Align</button>
+    </form>
+
+    {% if message %}
+    <p>{{ message }}</p>
+    {% endif %}
+
+    {% if alignment_result %}
+    <h2>Alignment Result:</h2>
+    <pre>{{ alignment_result }}</pre>
+    {% endif %}
+
+    <p>
+        <a href="/stats">Back to Statistics</a> |
+        <a href="/">Back to Home</a>
+    </p>
+</body>
+</html>
