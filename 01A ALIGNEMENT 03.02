@@ -1,4 +1,5 @@
 from Bio.Align import PairwiseAligner
+from pandas import pd
 #Viene importata la classe PairwiseAligner dalla libreria Bio.Align di Biopython, che è una libreria molto usata per la bioinformatica. La classe PairwiseAligner è utilizzata per effettuare allineamenti di sequenze biologiche (come DNA, RNA o proteine) utilizzando vari algoritmi.
 
 # Classe per l'allineamento
