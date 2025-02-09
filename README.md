@@ -30,7 +30,7 @@ UML e crc
 
 ### 2. **Class FastaParser (Concrete Subclass of DataParser)**  
 - **Purpose**: Implements specific parsing for FASTA files and organizes the files's genomic data in a structured table with an identifier, a description and an associated sequence. It implements the `parse(self, file_path)` method from FileParser.
-  
+  n
 - **Specific responsibilities**:
 	- Reads a FASTA file line by line.
  	- Organizes the different file's objects into a dictionary with three keys:  
