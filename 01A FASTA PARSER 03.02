@@ -19,7 +19,7 @@ class FastaParser:
     # Decoratore per validare la presenza del dataset caricato
     def ensure_data_loaded(func):
         def wrapper(self, *args, **kwargs):
-            if self._data == None:  # o si cambia come è scritto il decoratore oppure va messo dentro la classe perchè altrimenti non può accedere direttamente al self.__data; in ogni caso dove era stato messso a decorare un'altra funzione non andava bene
+            if self._data is None:  # o si cambia come è scritto il decoratore oppure va messo dentro la classe perchè altrimenti non può accedere direttamente al self.__data; in ogni caso dove era stato messso a decorare un'altra funzione non andava bene
                 raise ValueError("Nessun dataset caricato. Caricare un file FASTA prima di eseguire l'operazione.")
             return func(self, *args, **kwargs)
         return wrapper
@@ -32,7 +32,7 @@ class FastaParser:
         for line in f:
             line = line.strip()  # Rimuove eventuali spazi vuoti o caratteri di nuova linea
             if line.startswith(">"):  # Identifica una nuova sequenza
-                if identifier != None:  # Se c'è già una sequenza in corso, la aggiungiamo alla lista
+                if identifier is not None:  # Se c'è già una sequenza in corso, la aggiungiamo alla lista
                     sequences.append((identifier, description, sequence))
                 sequence = ""
                 header_parts = line[1:].split(" ", 1)  # divide la stringa in due parti usando lo spazio " " come separatore, ma solo al primo spazio che trova.
