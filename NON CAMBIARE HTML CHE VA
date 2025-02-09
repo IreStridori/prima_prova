@@ -1,0 +1,117 @@
+index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Upload FASTA</title>
+</head>
+<body>
+    <h1>Upload a FASTA File</h1>
+
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".fasta">
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+stats.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FASTA Stats</title>
+</head>
+<body>
+    <h1>FASTA Sequence Statistics</h1>
+
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Sequence</th>
+            <th>Length</th>
+            <th>GC Content</th>
+        </tr>
+        {% for s in stats %}
+        <tr>
+            <td>{{ s.ID }}</td>
+            <td>{{ s.Description }}</td>
+            <td>{{s.Sequence}} </td>
+            <td>{{ s.Length }}</td>
+            <td>{{ s["GC Content"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+        
+    <p> Would you like to do some more operations with your sequences? </p>
+    <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
+    <p>Go back to the <a href="/">home page</a>.</p>
+</body>
+</html>
+
+allign.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sequence Alignment</title>
+</head>
+<body>
+    <h1>Align Sequences</h1>
+
+
+    <p>{{ message }}</p>
+
+
+    <form action="/align" method="post">
+        <input type="number" name="seq1" placeholder="Sequence 1 index">
+        <input type="number" name="seq2" placeholder="Sequence 2 index">
+        <button type="submit">Align</button>
+    </form>
+
+
+    {% if alignment_result %}
+    <h2>Alignment Result</h2>
+    <pre>{{ alignment_result }}</pre>
+    {% endif %}
+    <p>Go back to the <a href="/FASTA Stats">statistics page</a>.</p>
+    <p>Go back to the <a href="/">home page</a>.</p>
+</body>
+</html>
+
+motif.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motif Search</title>
+</head>
+<body>
+    <h1>Search for a conserved Motif</h1>
+    <p> Do you have a known motif and want to know its statistics in the sequences of the dataset? </p>
+    <form action="/motif" method="post">
+        <input type="text" name="motif" placeholder="Enter motif">
+        <button type="submit">Search</button>
+    </form>
+    <br>
+     <p> If you don't, just insert: the sequence that you want to analyse, the length of the motif and the minimum of times that it has to be repeated </p>
+    <form action="/motif" method="post">
+        <input type="text" name="motif" placeholder="Enter: sequence, motif length, minimum">
+        <button type="submit">Search</button>
+    </form>
+    
+    {% if results %}
+    <h2>Results</h2>
+    <ul>
+        {% for r in results %}
+        <li>{{ r }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <p>Go back to the <a href="/FASTA Stats">statistics page</a>.</p>
+    <p>Go back to the <a href="/">home page</a>.</p>
+</body>
+</html>
