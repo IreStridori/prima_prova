@@ -100,7 +100,7 @@ def align():
                 seq2 = df.iloc[seq2_idx]['Sequence']
                
                 alignment = SequenceAlignment(seq1, seq2)
-                alignment.perform_alignement()
+                alignment.perform_alignment()
                 result = alignment.format_alignment()
                 score = alignment.alignments_score()
                
