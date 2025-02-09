@@ -12,7 +12,6 @@ index.html (Pagina principale - Upload del file)
         <input type="file" name="file" accept=".fasta">
         <button type="submit">Upload</button>
     </form>
-    <p>Go back to the <a href="/">home page</a>.</p>
 </body>
 </html>
 
