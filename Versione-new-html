@@ -28,6 +28,10 @@ stats.html (Statistiche delle sequenze)
 </head>
 <body>
     <h1>FASTA Sequence Statistics</h1>
+    <p> Would you like to do some more operations with your sequences? </p>
+    <a href="/stats">Visualize statistics </a>
+    <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
+    <p>Go back to the <a href="/">home page</a>.</p>
     <h2> This is the summary table that shows the sequences in your file </h2>
     <table border="1">
         <tr>
@@ -46,6 +50,20 @@ stats.html (Statistiche delle sequenze)
             <td>{{ s["GC Content"] }}</td>
         </tr>
         {% endfor %}
+
+</body>
+</html>
+
+
+stats2.html (Statistiche delle sequenze)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FASTA Stats</title>
+</head>
+<body>
+    <h1>FASTA Sequence Statistics</h1>
     <h2> This is the table that shows you length and GC content of the sequences of your file </h2>
     </table>
     <table border="1">
@@ -70,7 +88,6 @@ stats.html (Statistiche delle sequenze)
     <p>Go back to the <a href="/">home page</a>.</p>
 </body>
 </html>
-
 
 motif.html (Ricerca di un motif)
 <!DOCTYPE html>
