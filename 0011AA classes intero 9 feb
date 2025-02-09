@@ -18,7 +18,7 @@ class FastaParser:
     def __init__(self):
         self._data = None
 
-    @staticmethod  #forse così? così almeno come argomento gli va bene solo function
+    @staticmethod  #così almeno come argomento gli va bene solo function
     # Decoratore per validare la presenza del dataset caricato
     def ensure_data_loaded(func):
         def wrapper(self, *args, **kwargs):
