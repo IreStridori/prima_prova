@@ -1,4 +1,4 @@
-## **1. Introduction**
+### **1. Introduction**
 The project focuses on the development of a software which is capable for reading and structuring a FASTA files and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting Web Interface.
 
 ### **Technologies used**
@@ -69,20 +69,12 @@ UML e crc
   
 ### **7. Class SequenceMotif (Concrete Subclass of MotifAnalyser)**  
    - **Purpose**: extends `MotifAnalyser` and is responsible for identifying recurring sequence motifs within genomic data. It allows the use to insert as input a precise or not subsequence and it extracts it. It also provides insights into their frequency and occurrence across multiple sequences.  
-   - **Methods**:  
- #### **Methods**  
-✅ **`extract_motifs(self, sequence, motif_length, minimum)`**  
-- Extracts all possible subsequences of length `motif_length` from the given `sequence`.  
-- Uses `Counter()` from the `collections` module to count motif occurrences.  
-- Filters motifs that appear **at least `minimum` times**.  
-- Returns a **Pandas DataFrame** with motif counts.  
-
-✅ **`find_motif(self, motif)`**  
-- Searches for a **specific genetic motif** across all sequences in the dataset.  
-- Returns a **Pandas DataFrame** listing:  
-  - Sequence **Identifier**  
-  - **Motif** searched  
-  - **Number of occurrences** per sequence  
+   - **Methods**: 2 different ways of analysing a motif were implemented.
+   	- `extract_motifs(self, sequence, motif_length, minimum)`: if the user does not have a specific motif to search this method extracts all possible subsequences of length `motif_length` from the given `sequence` which repeats at least `minimum` times. Uses `Counter()` from the `collections` module to count motif occurrences. Returns a Pandas DataFrame with motif counts.
+	- `find_motif(self, motif)`: if the user has a specific genetic motif, this searches the subsequence across all sequences in the dataset. Returns a Pandas DataFrame listing:
+		- **Motif** searched 
+ 		- Sequence **Identifier**   
+		- **Number of occurrences** per sequence  
 
 #### **Key Features**  
 🔹 Efficient motif detection using **sliding window extraction** and **frequency filtering**.  
