@@ -6,7 +6,10 @@ index.html (Pagina principale - Upload del file)
     <title>Upload FASTA</title>
 </head>
 <body>
-    <h1>Upload a FASTA File</h1>
+    <h1>Hello! Welcome to the mithochondrial genomes analyser </h1>
+    <h2>This tool allows you to handle your FASTA file and supports various operations related to mithochondrial DNA analysis </h2>
+    <br>
+    <h3>Upload a FASTA File</h3>
 
     <form action="/upload" method="post" enctype="multipart/form-data">
         <input type="file" name="file" accept=".fasta">
@@ -25,7 +28,7 @@ stats.html (Statistiche delle sequenze)
 </head>
 <body>
     <h1>FASTA Sequence Statistics</h1>
-
+    <h2> This is the summary table that shows the sequences in your file </h2>
     <table border="1">
         <tr>
             <th>ID</th>
@@ -43,8 +46,25 @@ stats.html (Statistiche delle sequenze)
             <td>{{ s["GC Content"] }}</td>
         </tr>
         {% endfor %}
+    <h2> This is the table that shows you length and GC content of the sequences of your file </h2>
     </table>
-	
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Length</th>
+            <th>GC Content</th>
+        </tr>
+        {% for s in stats %}
+        <tr>
+            <td>{{ s.ID }}</td>
+            <td>{{ s.Description }}</td>
+            <td>{{ s.Length }}</td>
+            <td>{{ s["GC Content"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
     <p> Would you like to do some more operations with your sequences? </p>
     <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
     <p>Go back to the <a href="/">home page</a>.</p>
