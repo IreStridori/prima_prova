@@ -1,57 +1,155 @@
-Certamente! Qui trovi una spiegazione più dettagliata di ogni classe e dei suoi metodi:
+## **1. Introduction**
+The project focuses on the development of a software which is capable for reading and structuring a FASTA files and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting Web Interface.
 
-1. Classe DataParser (Superclasse astratta)
-	•	Scopo: Fornisce una struttura astratta per il parsing di diversi tipi di file genomici.
-	•	Metodo principale:
-	•	parse(self, file_path): È un metodo astratto (deve essere implementato dalle sottoclassi). Si occupa di definire la logica per leggere e processare i dati da un file.
+### **Technologies used**
+- Programming Language: Python (Pandas, Biopython and Flask libraries used)
+- Backend: Flask
+- Frontend: HTML
 
-La superclasse è utile per garantire che tutte le sottoclassi, come FastaParser, implementino il metodo parse in modo coerente.
+---
 
-2. Classe FastaParser (Sottoclasse concreta di DataParser)
-	•	Scopo: Implementa il parsing specifico per file FASTA. Questi file contengono dati genomici, organizzati con un identificatore e una sequenza associata.
-	•	Metodo principale:
-	•	parse(self, file_path):
-	1.	Legge un file FASTA riga per riga.
-	2.	Separa l’header (che inizia con >) dal contenuto della sequenza.
-	3.	Organizza i dati in un dizionario con tre chiavi:
-	•	ID: L’identificatore della sequenza (es. NC_012920.1).
-	•	Description: La descrizione dell’organismo o del contesto della sequenza.
-	•	Sequence: La sequenza nucleotidica stessa.
-	4.	Converte il dizionario in un DataFrame di Pandas per una gestione più semplice e organizzata.
+## **2. System design**
+### **System architecture and interactions**
+UML e crc 
 
-3. Classe Sequence (Superclasse generale per sequenze)
-	•	Scopo: Modella una sequenza genomica generica e fornisce metodi comuni per l’analisi di sequenze.
-	•	Attributi:
-	•	sequence: Rappresenta la sequenza nucleotidica come un oggetto Seq di Biopython, che include funzionalità avanzate per operare sulle sequenze.
-	•	Metodi:
-	•	length(self): Restituisce la lunghezza della sequenza.
-	•	gc_content(self): Calcola il contenuto GC (percentuale di basi G e C) utilizzando la funzione GC di Biopython.
+### **Web Interface structure**
+	--| app.py
+	--| uploads/
+	--| templates/
+		--| index.html
+		--| upload.html
+	 	--| stats.html
+	  	--| motif.html
+	   	--| allign.html
 
-4. Classe DNASequence (Sottoclasse di Sequence)
-	•	Scopo: Estende Sequence per aggiungere funzionalità specifiche alle sequenze di DNA.
-	•	Metodi aggiuntivi:
-	•	reverse_complement(self): Restituisce il complemento inverso della sequenza. È utile in bioinformatica perché il DNA è a doppio filamento, e il complemento inverso rappresenta il filamento opposto.
+---
 
-5. Classe MotifAnalyser
-	•	Scopo: Cerca specifici motivi (sequenze corte, es. “GATC”) in una lista di sequenze.
-	•	Attributi:
-	•	sequences: Una lista di sequenze (ad esempio, tutte quelle presenti in un file FASTA).
-	•	Metodi:
-	•	search_motif(self, motif): Cerca un motivo dato (motif) in ogni sequenza:
-	1.	Per ogni sequenza, trova tutte le posizioni in cui il motivo è presente.
-	2.	Restituisce una lista di dizionari, ciascuno con:
-	•	Sequence Index: L’indice della sequenza nella lista.
-	•	Motif Positions: Una lista di posizioni dove il motivo appare nella sequenza.
+## **3. Implementation: classes used and their responsibilities**
+### 1. **Class FileParser (Abstract Superclass)**  
+- **Purpose**: Provides an reusable structure for parsing different types of files. The only method it has is `parse(self, file_path)`, an abstract method for reading and processing data from a file path. The superclass ensures a that all subclasses implement the parse method.  
 
-6. Classe SequenceAligner
-	•	Scopo: Esegue l’allineamento tra due sequenze utilizzando il modulo pairwise2 di Biopython.
-	•	Attributi:
-	•	seq1 e seq2: Le due sequenze da allineare.
-	•	Metodi:
-	•	align(self): Esegue un allineamento globale (globalxx) tra le due sequenze, che confronta ogni base e trova la migliore corrispondenza possibile:
-	1.	Genera un elenco di allineamenti con punteggi e rappresentazioni visive.
-	2.	Restituisce questi allineamenti. È possibile visualizzare il miglior risultato o tutti i risultati.
+### 2. **Class FastaParser (Concrete Subclass of DataParser)**  
+- **Purpose**: Implements specific parsing for FASTA files and organizes the files's genomic data in a structured table with an identifier, a description and an associated sequence. It implements the `parse(self, file_path)` method from FileParser.
+  
+- **Specific responsibilities**:
+	- Reads a FASTA file line by line.
+ 	- Organizes the different file's objects into a dictionary with three keys:  
+		- **ID**: The sequence identifier (e.g., _NC_012920.1_).  
+		- **Description**: The description of the organism (e.g., _Homo sapiens mitochondrion, complete genome_).
+		- **Sequence**: The nucleotide sequence itself (e.g., _GATCACAGGT..._).  
+	- Converts the dictionary into a Pandas DataFrame for better organization and management.  
 
+- **Error management**: The class uses an `ensure_data_loaded` decorator which verifies if a file was uploaded by the user. In case it was not, it raises an error, informs the user with a specific message and halts the session.
+
+  @staticmethod
+ @ensure_data_loaded #se i dati non sono stati caricati non verrà eseguito.
+    def get_summary(self):
+        """describe(include="all") restituisce un riepilogo del dataset.: numero di valori unici per ogni colonna, frequenza degli identificatori, lunghezza media delle sequenze"""
+        return self._data.describe(include="all")
+
+    @ensure_data_loaded #aggiunto
+    def get_seq(self, index):
+        """Restituisce la sequenza e i dettagli della riga indicata."""
+        if index >= len(self._data) or index < 0:
+            raise IndexError(f"Indice {index} fuori dai limiti).")
+        seq = self._data.iloc[index].tolist()
+        return seq
+  
+### 3. **Class GenomicEntity (Concrete Superclass)**  
+- **Purpose**: Models a generic genomic sequence by setting common attributes (identifier, description, sequence) and provides a common method for sequence length calculation.
+
+### 4. **Class MitochondrialDNA (Subclass of GenomicEntity)**  
+   - **Purpose**: Extends `GenomicEntity` to add specific functionalities for DNA sequences.  
+   - **Specific responsibilities**:
+     	- Extract a subsequence by putting a start and an end index as inputs
+     	- GC content analysis of a sequence
+
+### 5. **Class MotifAnalyser (Abstract Class)** 
+- **Purpose**: Provides an reusable structure for working with different types of data and inserting different types of inputs (e.g., I could give as motif a tuple, a list, a string...). Defines the structure to work with (`data`) and an abstract method `find_motif(self, motif)` for serching a motif in a certain sequence. The superclass ensures a that all subclasses implement the find_motif method.
+  
+### **7. Class SequenceMotif (Concrete Subclass of MotifAnalyser)**  
+   - **Purpose**: extends `MotifAnalyser` and is responsible for identifying recurring sequence motifs within genomic data. It allows the use to insert as input a precise or not subsequence and it extracts it. It also provides insights into their frequency and occurrence across multiple sequences.  
+   - **Methods**:  
+ #### **Methods**  
+✅ **`extract_motifs(self, sequence, motif_length, minimum)`**  
+- Extracts all possible subsequences of length `motif_length` from the given `sequence`.  
+- Uses `Counter()` from the `collections` module to count motif occurrences.  
+- Filters motifs that appear **at least `minimum` times**.  
+- Returns a **Pandas DataFrame** with motif counts.  
+
+✅ **`find_motif(self, motif)`**  
+- Searches for a **specific genetic motif** across all sequences in the dataset.  
+- Returns a **Pandas DataFrame** listing:  
+  - Sequence **Identifier**  
+  - **Motif** searched  
+  - **Number of occurrences** per sequence  
+
+#### **Key Features**  
+🔹 Efficient motif detection using **sliding window extraction** and **frequency filtering**.  
+🔹 Helps identify **recurrent genetic patterns** that may be biologically significant.  
+
+---
+
+### **8. Sequence Alignment (`SequenceAlignment` Class)**  
+#### **Purpose**  
+The `SequenceAlignment` class handles **pairwise sequence alignment** using Biopython’s `PairwiseAligner`. It compares two sequences and calculates their similarity, producing a structured alignment output.  
+
+#### **Methods**  
+✅ **`__init__(self, seq1, seq2)`**  
+- Initializes the alignment object with **two input sequences (`seq1`, `seq2`)**.  
+- Uses **global alignment mode** by default.  
+
+✅ **`perform_alignment(self)`**  
+- Executes **pairwise sequence alignment** using `PairwiseAligner`.  
+- Stores the alignment results.  
+
+✅ **`format_alignment(self, n=1)`**  
+- Formats and returns the **top `n` alignments** in a readable string format.  
+- Helps visualize how sequences match or differ.  
+
+✅ **`alignments_score(self)`**  
+- Returns the **alignment score**, a numerical measure of sequence similarity.  
+- Higher scores indicate greater similarity.  
+
+#### **Key Features**  
+🔹 Uses **Biopython’s PairwiseAligner** for robust sequence comparison.  
+🔹 Supports **global sequence alignment** to find the best possible match.  
+🔹 Provides **alignment scoring** to quantify sequence similarity.  
+
+
+
+### 7. **Class SequenceAligner**  
+   - **Purpose**: Performs alignment between two sequences using Biopython’s `pairwise2` module.  
+   - **Attributes**:  
+     - `seq1` and `seq2`: The two sequences to be aligned.  
+   - **Methods**:  
+     - `align(self)`: Performs a **global alignment** (`globalxx`) between the two sequences, comparing each base and finding the best possible match:  
+       1. Generates a list of alignments with scores and visual representations.  
+       2. Returns these alignments. The best result or all results can be displayed.
+
+---
+### **3.3 Integrazione e Deployment** - **Procedure di installazione e configurazione**.  
+
+---
+
+## **5. Performance e Ottimizzazione**
+- **Metriche di performance** (tempo di risposta, uso di risorse).  
+- **Ottimizzazioni fatte** (es. caching, indexing, query ottimizzate).  
+- **Scalabilità** (possibilità di espandere il sistema in futuro).  
+
+---
+
+## **6. Conclusioni e Lavori Futuri**
+- **Limiti attuali del sistema**.  
+- **Possibili miglioramenti e sviluppi futuri**.  
+- **Lezioni apprese durante il progetto**.  
+
+---
+
+## **Appendici (opzionale)**
+- Codice di esempio per parti chiave.  
+- Link a documentazione tecnica.  
+- Guide rapide per sviluppatori futuri.  
 Esempio pratico delle interazioni
 	1.	Parsing:
 	•	Usa FastaParser per leggere un file FASTA e ottenere un DataFrame.
@@ -72,104 +170,3 @@ Cosa include la Parte 4
 	4.	Allineamento delle sequenze (/align):
 	•	Permette di selezionare due sequenze per eseguire un allineamento e visualizzare i risultati
 
-Template HTML
-Crea una directory chiamata templates/ e aggiungi i file HTML.
-
-###index.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Genomic Analysis</title>
-</head>
-<body>
-    <h1>Upload a FASTA File</h1>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".fasta">
-        <button type="submit">Upload</button>
-    </form>
-</body>
-</html>
-
-###stats.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Sequence Statistics</title>
-</head>
-<body>
-    <h1>Sequence Statistics</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Description</th>
-            <th>Length</th>
-            <th>GC Content</th>
-        </tr>
-        {% for stat in stats %}
-        <tr>
-            <td>{{ stat.ID }}</td>
-            <td>{{ stat.Description }}</td>
-            <td>{{ stat.Length }}</td>
-            <td>{{ stat['GC Content'] }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-</body>
-</html>
-
-###motif.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Motif Search</title>
-</head>
-<body>
-    <h1>Search for a Motif</h1>
-    <form method="post">
-        <input type="text" name="motif" placeholder="Enter motif">
-        <button type="submit">Search</button>
-    </form>
-    {% if results %}
-        <h2>Results for motif "{{ motif }}"</h2>
-        <ul>
-            {% for result in results %}
-                <li>Sequence {{ result['Sequence Index'] }}: {{ result['Motif Positions'] }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</body>
-</html>
-
-###align.html
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Sequence Alignment</title>
-</head>
-<body>
-    <h1>Align Sequences</h1>
-    <form method="post">
-        <label for="seq1">Sequence 1:</label>
-        <select name="seq1">
-            {% for i in range(fasta_data.shape[0]) %}
-            <option value="{{ i }}" {% if seq1_index == i %}selected{% endif %}>{{ i }}</option>
-            {% endfor %}
-        </select>
-        <label for="seq2">Sequence 2:</label>
-        <select name="seq2">
-            {% for i in range(fasta_data.shape[0]) %}
-            <option value="{{ i }}" {% if seq2_index == i %}selected{% endif %}>{{ i }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Align</button>
-    </form>
-    {% if alignment_result %}
-        <h2>Alignment Result</h2>
-        <pre>{{ alignment_result }}</pre>
-    {% endif %}
-</body>
-</html>
