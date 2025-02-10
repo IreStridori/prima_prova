@@ -1,6 +1,5 @@
 ### **1. Introduction**
-The project focuses on the development of a software which is capable for reading and structuring a FASTA files and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting Web Interface.
- **Scalabilità** (possibilità di espandere il sistema in futuro).  
+The project focuses on the development of a software which is capable of reading and structuring a FASTA file and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting Web Interface. The project also relies on scalability, so that the possibility to expand it in the future is concrete.
  
 ### **Technologies used**
 - Programming Language: Python (Pandas, Biopython and Flask libraries used)
@@ -70,50 +69,31 @@ devi scrivere delle cose su questi poi:
 ### 3.5 Class MotifAnalyser (Abstract Class)
 - **Purpose**: Provides an reusable structure for working with different types of data and inserting different types of inputs (e.g., I could give as motif a tuple, a list, a string...). Defines the structure to work with (`data`) and an abstract method `find_motif(self, motif)` for serching a motif in a certain sequence. The superclass ensures a that all subclasses implement the find_motif method.
 
-### 3.6 Class SequenceMotif (Concrete Subclass of MotifAnalyser) da finire  
-   - **Purpose**: extends `MotifAnalyser` and is responsible for identifying recurring sequence motifs within genomic data. It allows the use to insert as input a precise or not subsequence and it extracts it. It also provides insights into their frequency and occurrence across multiple sequences.  
+### 3.6 Class SequenceMotif (Concrete Subclass of MotifAnalyser)  
+   - **Purpose**: extends `MotifAnalyser` and is responsible for identifying recurrent genetic patterns that may be biologically significant. It allows the use to insert as input a precise or not subsequence and it extracts it. It also provides insights into their frequency and occurrence across multiple sequences.  
    - **Methods**: 2 different ways of analysing a motif were implemented.
-
      - `extract_motifs(self, sequence, motif_length, minimum)`: if the user does not have a specific motif to search this method extracts all possible subsequences of length `motif_length` from the given `sequence` which repeats at least `minimum` times. Uses `Counter()` from the `collections` module to count motif occurrences. Returns a Pandas DataFrame with motif counts.
+       
      - `find_motif(self, motif)`: if the user has a specific genetic motif, this searches the subsequence across all sequences in the dataset. Returns a Pandas DataFrame listing:
 		- **Motif** searched 
  		- Sequence **Identifier**   
 		- **Number of occurrences** per sequence  
 
-#### **Key Features**  
-🔹 Efficient motif detection using **sliding window extraction** and **frequency filtering**.  
-🔹 Helps identify **recurrent genetic patterns** that may be biologically significant.  
-
-
-### 3.7 Sequence Alignment (`SequenceAlignment` Class) da fare  
-#### **Purpose**  
-The `SequenceAlignment` class handles **pairwise sequence alignment** using Biopython’s `PairwiseAligner`. It compares two sequences and calculates their similarity, producing a structured alignment output.  
-
-#### **Methods**  
-✅ **`__init__(self, seq1, seq2)`**  
-- Initializes the alignment object with **two input sequences (`seq1`, `seq2`)**.  
-- Uses **global alignment mode** by default.  
-
-✅ **`perform_alignment(self)`**  
-- Executes **pairwise sequence alignment** using `PairwiseAligner`.  
-- Stores the alignment results.  
-
-✅ **`format_alignment(self, n=1)`**  
-- Formats and returns the **top `n` alignments** in a readable string format.  
-- Helps visualize how sequences match or differ.  
-
-✅ **`alignments_score(self)`**  
-- Returns the **alignment score**, a numerical measure of sequence similarity.  
-- Higher scores indicate greater similarity.  
-
-#### **Key Features**  
-🔹 Uses **Biopython’s PairwiseAligner** for robust sequence comparison.  
-🔹 Supports **global sequence alignment** to find the best possible match.  
-🔹 Provides **alignment scoring** to quantify sequence similarity.  
-
+### 3.7 Sequence Alignment (Concrete Class)
+- **Purpose**: using Biopython’s `PairwiseAligner` module, it manages to handle robust pairwise sequence alignment. It compares two sequences and calculates their similarity, producing a structured alignment output.  
+- **Methods and responsibilities**:
+	- Initializes the alignment object with **two input sequences (`seq1`, `seq2`)**.  
+	- Uses **global alignment mode** by default.  
+	- Executes **pairwise sequence alignment**.  
+	- Stores the alignment results.  
+	- `format_alignment(self, n=1)` formats and returns the **top `n` alignments** in a readable string format.  
+	- Helps visualize how sequences match or differ.  
+	- Returns the **alignment score**, a numerical measure of sequence similarity.
+   
 ---
 ## 4 parte di flask e html
 scrivi cosa fanno
+
 ---
 ### 5. Procedure di installazione e configurazione e esempio pratico 
 Run the Flask App
