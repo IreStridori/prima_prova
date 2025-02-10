@@ -25,11 +25,11 @@ immagini UML e crc
 
 ---
 
-## **3. Implementation: classes used and their responsibilities**
+## 3. Implementation: classes used and their responsibilities
 ### 3.1 Class FileParser (Abstract Superclass)
 - **Purpose**: Provides an reusable structure for parsing different types of files. The only method it has is `parse(self, file_path)`, an abstract method for reading and processing data from a file path. The superclass ensures a that all subclasses implement the parse method.  
 
-### 2. **Class FastaParser (Concrete Subclass of DataParser)**  
+### 3.2 Class FastaParser (Concrete Subclass of DataParser)  
 - **Purpose**: Implements specific parsing for FASTA files and organizes the files's genomic data in a structured table with an identifier, a description and an associated sequence. It implements the `parse(self, file_path)` method from FileParser.
   n
 - **Specific responsibilities**:
@@ -42,6 +42,7 @@ immagini UML e crc
 
 - **Error management**: The class uses an `ensure_data_loaded` decorator which verifies if a file was uploaded by the user. In case it was not, it raises an error, informs the user with a specific message and halts the session.
 
+devi scrivere delle cose su questi poi:
 @staticmethod
 
  @ensure_data_loaded #se i dati non sono stati caricati non verrà eseguito.
@@ -57,19 +58,19 @@ immagini UML e crc
         seq = self._data.iloc[index].tolist()
         return seq
   
-### 3. **Class GenomicEntity (Concrete Superclass)**  
+### 3.3 Class GenomicEntity (Concrete Superclass)
 - **Purpose**: Models a generic genomic sequence by setting common attributes (identifier, description, sequence) and provides a common method for sequence length calculation.
 
-### 4. **Class MitochondrialDNA (Subclass of GenomicEntity)**  
+### 3.4 Class MitochondrialDNA (Subclass of GenomicEntity) 
    - **Purpose**: Extends `GenomicEntity` to add specific functionalities for DNA sequences.  
    - **Specific responsibilities**:
      	- Extract a subsequence by putting a start and an end index as inputs
      	- GC content analysis of a sequence
 
-### 5. **Class MotifAnalyser (Abstract Class)** 
+### 3.5 Class MotifAnalyser (Abstract Class)
 - **Purpose**: Provides an reusable structure for working with different types of data and inserting different types of inputs (e.g., I could give as motif a tuple, a list, a string...). Defines the structure to work with (`data`) and an abstract method `find_motif(self, motif)` for serching a motif in a certain sequence. The superclass ensures a that all subclasses implement the find_motif method.
 
-### **6. Class SequenceMotif (Concrete Subclass of MotifAnalyser)**  
+### 3.6 Class SequenceMotif (Concrete Subclass of MotifAnalyser) da finire  
    - **Purpose**: extends `MotifAnalyser` and is responsible for identifying recurring sequence motifs within genomic data. It allows the use to insert as input a precise or not subsequence and it extracts it. It also provides insights into their frequency and occurrence across multiple sequences.  
    - **Methods**: 2 different ways of analysing a motif were implemented.
 
@@ -84,7 +85,7 @@ immagini UML e crc
 🔹 Helps identify **recurrent genetic patterns** that may be biologically significant.  
 
 
-### **8. Sequence Alignment (`SequenceAlignment` Class)**  
+### 3.7 Sequence Alignment (`SequenceAlignment` Class) da fare  
 #### **Purpose**  
 The `SequenceAlignment` class handles **pairwise sequence alignment** using Biopython’s `PairwiseAligner`. It compares two sequences and calculates their similarity, producing a structured alignment output.  
 
@@ -110,27 +111,13 @@ The `SequenceAlignment` class handles **pairwise sequence alignment** using Biop
 🔹 Supports **global sequence alignment** to find the best possible match.  
 🔹 Provides **alignment scoring** to quantify sequence similarity.  
 
-
-
-### 7. **Class SequenceAligner**   riprendi la nuova
-   - **Purpose**: Performs alignment between two sequences using Biopython’s `pairwise2` module.  
-   - **Attributes**:  
-     - `seq1` and `seq2`: The two sequences to be aligned.  
-   - **Methods**:  
-     - `align(self)`: Performs a **global alignment** (`globalxx`) between the two sequences, comparing each base and finding the best possible match:  
-       1. Generates a list of alignments with scores and visual representations.  
-       2. Returns these alignments. The best result or all results can be displayed.
-
 ---
 ## 4 parte di flask e html
-
+scrivi cosa fanno
 ---
 ### 5. Procedure di installazione e configurazione e esempio pratico 
 
 ---
 
-## **6. Conclusioni e Lavori Futuri**
-- **Limiti attuali del sistema**.  
-- **Possibili miglioramenti e sviluppi futuri**.  
-- **Lezioni apprese durante il progetto**.  
+## 6. Conclusioni Limiti attuali del sistema, Possibili miglioramenti e sviluppi futuri, Lezioni apprese durante il progetto.  
 
