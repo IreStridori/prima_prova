@@ -57,3 +57,95 @@ datafram.html
 
 </body>
 </html>
+
+stats.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FASTA Stats</title>
+</head>
+<body>
+    <h1>FASTA Sequences Statistics</h1>
+    <h2> This is the table that shows you length and GC content of the sequences of your file </h2>
+    </table>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Length</th>
+            <th>GC Content</th>
+        </tr>
+        {% for s in stats %}
+        <tr>
+            <td>{{ s.ID }}</td>
+            <td>{{ s.Description }}</td>
+            <td>{{ s.Length }}</td>
+            <td>{{ s["GC Content"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p> Would you like to do some more operations with your sequences? </p>
+    <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
+    <p>Go back to the <a href="/dataframe">DataFrame page</a>.</p>
+</body>
+</html>
+
+motifs.html
+<!-- motif.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Motif Analysis</title>
+</head>
+<body>
+    <h1>Motif Analysis</h1>
+
+    <h2>Search Known Motif</h2>
+    <form action="/motif" method="post">
+        <input type="text" name="known_motif" placeholder="Enter motif (e.g., TATA)">
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Find Recurring Motifs</h2>
+    <form action="/motif" method="post">
+        <p>Sequence Index: <input type="number" name="seq_index" min="0" required></p>
+        <p>Motif Length: <input type="number" name="motif_length" min="1" required></p>
+        <p>Minimum Occurrences: <input type="number" name="min_occurrences" min="1" required></p>
+        <button type="submit">Find Motifs</button>
+    </form>
+
+    {% if results %}
+    <h2>Results:</h2>
+    <pre>{{ results }}</pre>
+    {% endif %}
+
+
+align.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sequence Alignment</title>
+</head>
+<body>
+    <h1>Align Sequences</h1>
+
+    <p>{{ message }}</p>
+
+    <form action="/align" method="post">
+        <input type="number" name="seq1" placeholder="Sequence 1 index">
+        <input type="number" name="seq2" placeholder="Sequence 2 index">
+        <button type="submit">Align</button>
+    </form>
+
+    {% if alignment_result %}
+    <h2>Alignment Result</h2>
+    <pre>{{ alignment_result }}</pre>
+    {% endif %}
+    <p>Go back to the <a href="/dataframe">statistics page</a>.</p>
+    <p>Go to the <a href="/motif">motif page</a>.</p>
+    <p>Go to the <a href="/stats">stats page</a>.</p>
+</body>
+</html>
