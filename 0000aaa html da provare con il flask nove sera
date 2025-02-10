@@ -1,0 +1,152 @@
+home.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Home </title>
+</head>
+<body>
+    <h1>Hello! Welcome to the mithochondrial genomes analyser </h1>
+    <h2>This tool allows you to handle your FASTA file and supports various operations related to mithochondrial DNA analysis </h2>
+    <br>
+    <h3>Upload a FASTA File</h3>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".fasta">
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>
+
+dataframe.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FASTA DataFrame</title>
+</head>
+<body>
+    <h1>FASTA DataFrame </h1>
+
+    <p> Would you like to do some more operations with your sequences? </p>
+    <a href="/stats">Visualize statistics </a> | <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
+    <p>Go back to the <a href="/">home page</a>.</p>
+
+    <h2> This is the summary table that shows the sequences in your file </h2>
+    
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Sequence</th>
+        </tr>
+        {% for s in data %}
+        <tr>
+            <td>{{ s.ID }}</td>
+            <td>{{ s.Description }}</td>
+            <td>{{s.Sequence}} </td>
+            
+        </tr>
+        {% endfor %}
+
+</body>
+</html>
+
+stats.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FASTA Stats</title>
+</head>
+<body>
+    <h1>FASTA Sequences Statistics</h1>
+    <h2> This is the table that shows you length and GC content of the sequences of your file </h2>
+    </table>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Length</th>
+            <th>GC Content</th>
+        </tr>
+        {% for s in stats %}
+        <tr>
+            <td>{{ s.ID }}</td>
+            <td>{{ s.Description }}</td>
+            <td>{{ s.Length }}</td>
+            <td>{{ s["GC Content"] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p> Would you like to do some more operations with your sequences? </p>
+    <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
+    <p>Go back to the <a href="/dataframe">DataFrame page</a>.</p>
+</body>
+</html>
+
+motif.html
+MOTIF CON I DUE BOTTONI 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Motif Search</title>
+</head>
+<body>
+    <h1>Search for a conserved Motif</h1>
+    <p> Do you have a known motif and want to know its statistics in the sequences of the dataset? </p>
+    
+    <form action="/process" method="POST">
+        <input type="text" name="motif" placeholder="Enter motif">
+        <button type="submit" name="action" value="submit1">Submit 1</button>
+    </form>
+
+    <form action="/process" method="POST">
+        <input type="text" name="VA DATO UN NOME" placeholder=""Enter: sequence, motif length, minimum"">
+        <button type="submit" name="action" value="submit2">Submit 2</button>
+    </form>
+    
+    {% if results %}
+    <h2>Results</h2>
+    <ul>
+        {% for r in results %}
+        <li>{{ r }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <p>Go back to the <a href="/dataframe"> DataFrame page</a>.</p>
+    <p>Go to the <a href="/align">align page</a>.</p>
+    <p>Go to the <a href="/stats">stats page</a>.</p>
+</body>
+</html>
+
+align.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sequence Alignment</title>
+</head>
+<body>
+    <h1>Align Sequences</h1>
+
+    <p>{{ message }}</p>
+
+    <form action="/align" method="post">
+        <input type="number" name="seq1" placeholder="Sequence 1 index">
+        <input type="number" name="seq2" placeholder="Sequence 2 index">
+        <button type="submit">Align</button>
+    </form>
+
+    {% if alignment_result %}
+    <h2>Alignment Result</h2>
+    <pre>{{ alignment_result }}</pre>
+    {% endif %}
+    <p>Go back to the <a href="/dataframe">statistics page</a>.</p>
+    <p>Go to the <a href="/motif">motif page</a>.</p>
+    <p>Go to the <a href="/stats">stats page</a>.</p>
+</body>
+</html>
