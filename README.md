@@ -1,6 +1,7 @@
 ### **1. Introduction**
 The project focuses on the development of a software which is capable for reading and structuring a FASTA files and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting Web Interface.
-
+ **Scalabilità** (possibilità di espandere il sistema in futuro).  
+ 
 ### **Technologies used**
 - Programming Language: Python (Pandas, Biopython and Flask libraries used)
 - Backend: Flask
@@ -10,7 +11,7 @@ The project focuses on the development of a software which is capable for readin
 
 ## **2. System design**
 ### **System architecture and interactions**
-UML e crc 
+immagini UML e crc 
 
 ### **Web Interface structure**
 	--| app.py
@@ -25,7 +26,7 @@ UML e crc
 ---
 
 ## **3. Implementation: classes used and their responsibilities**
-### 1. **Class FileParser (Abstract Superclass)**  
+### 3.1 Class FileParser (Abstract Superclass)
 - **Purpose**: Provides an reusable structure for parsing different types of files. The only method it has is `parse(self, file_path)`, an abstract method for reading and processing data from a file path. The superclass ensures a that all subclasses implement the parse method.  
 
 ### 2. **Class FastaParser (Concrete Subclass of DataParser)**  
@@ -41,7 +42,8 @@ UML e crc
 
 - **Error management**: The class uses an `ensure_data_loaded` decorator which verifies if a file was uploaded by the user. In case it was not, it raises an error, informs the user with a specific message and halts the session.
 
-  @staticmethod
+@staticmethod
+
  @ensure_data_loaded #se i dati non sono stati caricati non verrà eseguito.
     def get_summary(self):
         """describe(include="all") restituisce un riepilogo del dataset.: numero di valori unici per ogni colonna, frequenza degli identificatori, lunghezza media delle sequenze"""
@@ -81,7 +83,6 @@ UML e crc
 🔹 Efficient motif detection using **sliding window extraction** and **frequency filtering**.  
 🔹 Helps identify **recurrent genetic patterns** that may be biologically significant.  
 
----
 
 ### **8. Sequence Alignment (`SequenceAlignment` Class)**  
 #### **Purpose**  
@@ -111,7 +112,7 @@ The `SequenceAlignment` class handles **pairwise sequence alignment** using Biop
 
 
 
-### 7. **Class SequenceAligner**  
+### 7. **Class SequenceAligner**   riprendi la nuova
    - **Purpose**: Performs alignment between two sequences using Biopython’s `pairwise2` module.  
    - **Attributes**:  
      - `seq1` and `seq2`: The two sequences to be aligned.  
@@ -121,14 +122,10 @@ The `SequenceAlignment` class handles **pairwise sequence alignment** using Biop
        2. Returns these alignments. The best result or all results can be displayed.
 
 ---
-### **3.3 Integrazione e Deployment** - **Procedure di installazione e configurazione**.  
+## 4 parte di flask e html
 
 ---
-
-## **5. Performance e Ottimizzazione**
-- **Metriche di performance** (tempo di risposta, uso di risorse).  
-- **Ottimizzazioni fatte** (es. caching, indexing, query ottimizzate).  
-- **Scalabilità** (possibilità di espandere il sistema in futuro).  
+### 5. Procedure di installazione e configurazione e esempio pratico 
 
 ---
 
@@ -136,30 +133,4 @@ The `SequenceAlignment` class handles **pairwise sequence alignment** using Biop
 - **Limiti attuali del sistema**.  
 - **Possibili miglioramenti e sviluppi futuri**.  
 - **Lezioni apprese durante il progetto**.  
-
----
-
-## **Appendici (opzionale)**
-- Codice di esempio per parti chiave.  
-- Link a documentazione tecnica.  
-- Guide rapide per sviluppatori futuri.  
-Esempio pratico delle interazioni
-	1.	Parsing:
-	•	Usa FastaParser per leggere un file FASTA e ottenere un DataFrame.
-	2.	Analisi di sequenze:
-	•	Crea un oggetto DNASequence con una delle sequenze parse e calcola la lunghezza, il GC content e il complemento inverso.
-	3.	Ricerca di motivi:
-	•	Usa MotifAnalyser per cercare un motivo specifico in tutte le sequenze del file FASTA.
-	4.	Allineamento:
-	•	Allinea due sequenze usando SequenceAligner e ottieni un punteggio e una rappresentazione visiva del miglior allineamento.
-
-Cosa include la Parte 4
-	1.	Pagina principale (/):
-	•	Permette di caricare un file FASTA tramite un modulo HTML.
-	2.	Statistiche delle sequenze (/stats):
-	•	Mostra lunghezza e GC content per ogni sequenza nel file caricato.
-	3.	Ricerca motivi (/motif):
-	•	Consente di inserire un motivo (es. “GATC”) e visualizzare dove si trova nelle sequenze.
-	4.	Allineamento delle sequenze (/align):
-	•	Permette di selezionare due sequenze per eseguire un allineamento e visualizzare i risultati
 
