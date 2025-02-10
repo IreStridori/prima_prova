@@ -116,8 +116,60 @@ The `SequenceAlignment` class handles **pairwise sequence alignment** using Biop
 scrivi cosa fanno
 ---
 ### 5. Procedure di installazione e configurazione e esempio pratico 
+Run the Flask App
+Start the application by running: python app.py
+The app will be accessible at http://127.0.0.1:5000/.
 
 ---
 
 ## 6. Conclusioni Limiti attuali del sistema, Possibili miglioramenti e sviluppi futuri, Lezioni apprese durante il progetto.  
+Current Limitations of the System:
+File Format Restrictions:
+The application only supports uploading files in FASTA format, limiting its usability for datasets stored in other common bioinformatics formats (e.g., GenBank or EMBL).
 
+Basic Error Handling and Validation:
+Error handling is minimal. For example, the system may not adequately handle malformed FASTA files or unexpected user inputs, which can lead to uninformative error messages or crashes.
+
+Session-Based File Storage:
+The use of Flask sessions to store the file path is simple but not ideal for multi-user environments or larger datasets. This approach can lead to scalability issues and potential data conflicts when multiple users access the system concurrently.
+
+Limited Analysis Capabilities:
+The functionality is focused on basic sequence statistics (length and GC content), motif search, and pairwise alignment. More advanced analyses, such as phylogenetic tree construction or structural predictions, are not supported.
+
+User Interface and Visualization:
+The web interface is functional but basic. There is limited visualization for sequence alignments, motif occurrences, and other analytical results, which might hinder usability for more in-depth analyses.
+
+Possible Improvements and Future Developments:
+Expanded File Format Support:
+Incorporate additional file formats (e.g., GenBank, EMBL) to make the tool more versatile for different types of sequence data.
+
+Enhanced Error Handling and User Feedback:
+Implement more robust validation and error reporting mechanisms to provide users with clear feedback when something goes wrong (e.g., detailed error messages for invalid input or parsing failures).
+
+Scalability Enhancements:
+Transition from session-based storage to a more robust data management system, such as a database, to support multi-user access and large datasets. This change would improve performance and reliability.
+
+Advanced Analytical Features:
+Expand the analytical capabilities by integrating additional bioinformatics tools and algorithms. For instance, adding functionality for BLAST searches, multiple sequence alignments, or phylogenetic analysis could greatly enhance the system's utility.
+
+Improved User Interface and Visualization:
+Upgrade the web interface with interactive visualizations (e.g., graphical displays of alignments, motif maps, or sequence composition charts) to improve user experience and facilitate data interpretation.
+
+API Integration and Extensibility:
+Consider developing RESTful API endpoints to allow integration with other bioinformatics tools and pipelines, enabling programmatic access to the analysis functions.
+
+Lessons Learned During the Project:
+Modular Design is Crucial:
+Organizing the application into distinct classes (for FASTA parsing, sequence statistics, motif analysis, and alignment) helped maintain a clear separation of concerns and made the code easier to manage and extend.
+
+Balancing Simplicity and Functionality:
+While a simple Flask-based web application is great for rapid prototyping, building a robust and scalable system requires careful planning around data management, error handling, and user session management.
+
+Importance of Robust Error Handling:
+Implementing comprehensive error checking early on can save time in debugging and significantly improve the user experience by providing meaningful feedback.
+
+User-Centered Design Considerations:
+Early user feedback highlighted the need for a more intuitive interface and clearer visualizations. Focusing on usability from the beginning can guide the development of more effective bioinformatics tools.
+
+Scalability and Performance:
+Handling large biological datasets is challenging. The project reinforced the importance of planning for scalability, both in terms of data processing and user concurrency, even in early-stage prototypes.
