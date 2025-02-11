@@ -105,6 +105,7 @@ class MotifAnalyser(ABC):
 class SequenceMotif(MotifAnalyser): #inerita init da superclasse
     #Estrae tutte le subsequenze di lunghezza motif_length dalla sequence e restituisce una lista di motivi.
     # Conta le occorrenze di ciascun motivo (usa Counter() di collections). Filtra i motivi che compaiono più di minimum volte. Restituisce un DataFrame con i motivi e la loro frequenza.
+    
     def extract_motifs(self, sequence, motif_length, minimum):
         motifs = [sequence[i:i + motif_length] for i in range(len(sequence) - motif_length + 1)]
         motif_counts = dict(Counter(motifs))
@@ -112,7 +113,17 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
         motifs_df = pd.DataFrame(list(recurrent_motifs.items()), columns=["motif", "count"]).set_index("motif")
         return motifs_df
 
+    def search_motif(sequence, motif):
+    positions = []
+    index = sequence.find(motif)  # Trova la prima occorrenza
+    
+    while index != -1:
+        positions.append(index)
+        index = sequence.find(motif, index + 1)  # Cerca la prossima occorrenza
     #Cerca un motivo genetico specifico in tutte le sequenze del dataframe e ti dice quante volte l'ha trovato per ogni sequenza
+        return positions
+
+
     def find_motif(self, motif):
         motif = motif.upper()
         results = []
