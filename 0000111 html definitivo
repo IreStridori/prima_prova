@@ -93,33 +93,44 @@ stats.html
 </html>
 
 motifs.html
-<!-- motif.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Motif Analysis</title>
 </head>
 <body>
-    <h1>Motif Analysis</h1>
-
-    <h2>Search Known Motif</h2>
-    <form action="/motif" method="post">
-        <input type="text" name="known_motif" placeholder="Enter motif (e.g., TATA)">
-        <button type="submit">Search</button>
+    <h1>Search for a conserved Motif</h1>
+    <p> Do you have a known motif and want to know its statistics in the sequences of the dataset? </p>
+    
+    <form action="/motif" method="POST">
+        <input type="text" name="submit_search" placeholder="Enter sequence index">
+        <button type="submit" name="action" value="submit"> Submit</button>
     </form>
 
-    <h2>Find Recurring Motifs</h2>
-    <form action="/motif" method="post">
-        <p>Sequence Index: <input type="number" name="seq_index" min="0" required></p>
-        <p>Motif Length: <input type="number" name="motif_length" min="1" required></p>
-        <p>Minimum Occurrences: <input type="number" name="min_occurrences" min="1" required></p>
-        <button type="submit">Find Motifs</button>
+    <form action="/motif" method="POST">
+        <input type="text" name="submit_find" placeholder="Enter motif">
+        <button type="submit" name="action" value="submit"> Submit </button>
     </form>
+    
+    {% if search_motif%}
+    <h2>Results</h2>
+    <ul>
+        <li>{{search_motif}}</li>
+    </ul>
 
-    {% if results %}
-    <h2>Results:</h2>
-    <pre>{{ results }}</pre>
     {% endif %}
+
+    {% if find_motif%}
+    <h2>Results</h2>
+    <ul>
+        {% for r in find_motif%}
+        <li>{{ r }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    
+    <p>Go back to the <a href="/dataframe"> DataFrame page</a>.</p>
+    <p>Go to the <a href="/align">align page</a>.</p>
+    <p>Go to the <a href="/stats">stats page</a>.</p>
+</body>
+</html>
 
 
 align.html
