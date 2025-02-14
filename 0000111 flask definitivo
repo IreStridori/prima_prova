@@ -2,13 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.utils import secure_filename
 import os
 from classes import FastaParser, MitochondrialDNA, SequenceMotif, SequenceAlignment
-
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Necessario per usare session
 
 # Configurazione upload
-UPLOAD_FOLDER = 'uploads' 
+UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'fasta'}
 
 if not os.path.exists(UPLOAD_FOLDER):
@@ -43,6 +41,8 @@ def upload_file():
         # Parse del file FASTA
         parser = FastaParser()
         parser.parse_file(filepath)
+        
+        
        
         # Salva il DataFrame nella sessione
         session['filepath'] = filepath
@@ -66,3 +66,87 @@ def dataframe():
             'Sequence': row['Sequence']
         })
     return render_template('dataframe.html', data=data)
+
+
+@app.route('/stats', methods=['GET', 'POST'])
+def stats():
+    parser = FastaParser()
+    parser.parse_file(session['filepath'])
+    # Calcola le statistiche
+    df = parser.get_DataFrame()
+    stats = []
+    for _, row in df.iterrows():
+        mito_dna = MitochondrialDNA(row['Identifier'], row['Description'], row['Sequence'])
+        stats.append({
+            'ID': row['Identifier'],
+            'Description': row['Description'],
+            'Length': mito_dna.length(),
+            'GC Content': f"{mito_dna.gc_content():.2f}%"
+        })
+    return render_template('stats.html', stats=stats)
+    #return render_template('stats.html')
+#return redirect(request.url)
+
+@app.route('/motif', methods=['GET', 'POST'])
+def motif():
+    search=None
+    find_motif=None
+    
+    if request.method == 'POST':
+        parser = FastaParser()
+        parser.parse_file(session['filepath'])
+        df = parser.get_DataFrame()
+        motif_analyzer = SequenceMotif(df)
+           
+        
+        motif_input_search = request.form.get("submit_search")
+        motif_input_find = request.form.get('submit_find')
+        
+        search_motif = []
+        if motif_input_search:
+            seq_idx, motif = motif_input_search.split(',')
+            seq = df.iloc[int(seq_idx)]['Sequence']
+            search = motif_analyzer.search_motif(seq, motif)
+            
+        find_motif = []
+        if motif_input_find:
+            results = motif_analyzer.find_motif(motif_input_find)
+            find_motif = results.to_string().split('\n')
+        
+        return render_template('motif.html', search_motif=search, find_motif=find_motif)
+
+    return render_template('motif.html')
+    
+
+
+@app.route('/align', methods=['GET', 'POST'])
+def align():
+    if request.method == 'POST':
+        parser = FastaParser()
+        parser.parse_file(session['filepath'])
+        df = parser.get_DataFrame()
+       
+        try:
+            seq1_idx = int(request.form['seq1'])
+            seq2_idx = int(request.form['seq2'])
+           
+            if 0 <= seq1_idx < len(df) and 0 <= seq2_idx < len(df):
+                seq1 = df.iloc[seq1_idx]['Sequence']
+                seq2 = df.iloc[seq2_idx]['Sequence']
+               
+                alignment = SequenceAlignment(seq1, seq2)
+                alignment.perform_alignment()
+                result = alignment.format_alignment()
+                score = alignment.alignments_score()
+               
+                message = f"Alignment Score: {score}"
+                return render_template('align.html', message=message, alignment_result=result)
+            else:
+                return render_template('align.html', message="Invalid sequence indices")
+        except ValueError:
+            return render_template('align.html', message="Please enter valid numbers")
+   
+    return render_template('align.html', message="Enter sequence indices to align")
+
+if __name__ == '__main__':
+    app.run(debug=True)
