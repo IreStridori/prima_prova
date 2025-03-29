@@ -91,10 +91,136 @@ devi scrivere delle cose su questi poi:
 	- Returns the **alignment score**, a numerical measure of sequence similarity.
    
 ---
-## 4 parte di flask
-scrivi cosa fanno
+## 4 Backend: Flask framework functionalities
+### Setup and imports
+```python
+from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.utils import secure_filename
+import os
+from classes import FastaParser, MitochondrialDNA, SequenceMotif, SequenceAlignment
+```
+- Imports necessary Flask components for web functionality
+- Uses werkzeug.utils for secure file handling
+- Imports custom Python classes that handle the biological aspects: (FastaParser, MitochondrialDNA, SequenceMotif, SequenceAlignment)
 
-## 5 HTML strucutre and functionalities
+### App creation
+```python
+app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'  
+
+# Upload configuration
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'fasta'}
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+```
+
+- The secret key is needed for session security
+- Configures an upload folder for FASTA files
+- Restricts uploads to only .fasta files
+- Creates the upload directory if it doesn't exist
+
+### Routes:
+**Home route**:
+```python
+@app.route('/')
+def home():
+    # Retrieve the variable from the session
+    uploaded_file = session.get('filepath', None)
+    return render_template('home.html', uploaded_file=uploaded_file)
+```
+- Checks if a file has been previously uploaded by retrieving the filepath from the session
+- Passes this information to the home html template
+
+**File Upload Route**:
+```python
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return redirect(url_for('home'))
+   
+    file = request.files['file']
+    if file.filename == '':
+        return redirect(url_for('home'))
+   
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+       
+        # Parse FASTA file
+        parser = FastaParser()
+        parser.parse_file(filepath)
+       
+        # Save filepath in session
+        session['filepath'] = filepath
+        return redirect(url_for('home'))
+```
+- Validates the file submission (presence and file type), if something is wrong it goes back to the homepage.
+- Secures the filename to prevent security issues and saves it to the precreated upload directory
+- Parses the file immediately using the FastaParser class
+- Stores the filepath in the session for later access
+- Redirects back to the home page
+
+**DataFrame Route**
+```python
+@app.route('/dataframe', methods=['GET', 'POST'])
+def dataframe():
+    if 'filepath' not in session:
+        return redirect(url_for('home'))
+    
+    parser = FastaParser()
+    parser.parse_file(session['filepath'])
+    df = parser.get_DataFrame()
+    data = []
+    for _, row in df.iterrows():
+        mito_dna = MitochondrialDNA(row['Identifier'], row['Description'], row['Sequence'])
+        data.append({
+            'ID': row['Identifier'],
+            'Description': row['Description'],
+            'Sequence': row['Sequence']
+        })
+    return render_template('dataframe.html', data=data)
+```
+- Redirects to home if no file has been uploaded (no filepath in session)
+- Parses the uploaded file to generate the DataFrame
+- Iterates through each row, creating MitochondrialDNA objects
+- Constructs a list of dictionaries with sequence information
+- Passes this data to the dataframe template for displaying 
+
+**Statistics Route**
+```python
+@app.route('/stats', methods=['GET', 'POST'])
+def stats():
+    parser = FastaParser()
+    parser.parse_file(session['filepath'])
+    # Calculate statistics
+    df = parser.get_DataFrame()
+    stats = []
+    for _, row in df.iterrows():
+        mito_dna = MitochondrialDNA(row['Identifier'], row['Description'], row['Sequence'])
+        stats.append({
+            'ID': row['Identifier'],
+            'Description': row['Description'],
+            'Length': mito_dna.length(),
+            'GC Content': f"{mito_dna.gc_content():.2f}%"
+        })
+    return render_template('stats.html', stats=stats)
+```
+Generates statistical information about the sequences
+Uses the MitochondrialDNA class to calculate:
+
+Sequence length
+GC content (percentage of guanine and cytosine bases)
+
+
+Formats the GC content with two decimal places
+Passes the statistics to the stats template for display
+
+## 5 Frontend: HTML strucutre and functionalities
 We focused on a functional simple design rather than an aesthetic one given the scientific/research purposes. The navigation structure is:
 **Upload → Parse → Visualize → Analyze (through statistics, motif searches, or alignments)**
 
