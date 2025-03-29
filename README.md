@@ -1,5 +1,5 @@
 ### **1. Introduction**
-The project focuses on the development of a software which is capable of reading and structuring a FASTA file and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting Web Interface. The project also relies on scalability, so that the possibility to expand it in the future is concrete.
+The project focuses on the development of a software which is capable of reading and structuring a FASTA file and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting, user-friendly, Web Interface. The project also relies on scalability, so that the possibility to expand it in the future is concrete.
  
 ### **Technologies used**
 - Programming Language: Python (Pandas, Biopython and Flask libraries used)
@@ -91,18 +91,81 @@ devi scrivere delle cose su questi poi:
 	- Returns the **alignment score**, a numerical measure of sequence similarity.
    
 ---
-## 4 parte di flask e html
+## 4 parte di flask
 scrivi cosa fanno
 
+## 5 HTML strucutre and functionalities
+- **home.html**: starting page for the application:
+	- **Header section**: Declares the document type and includes basic metadata like character encoding
+	- **Title**: "Mitochondrial Genomes Analyzer"
+	- **Description**: Explains that the tool handles FASTA files for mitochondrial DNA analysis
+	- **Upload functionality**: 
+ 		 - Contains a form with a file input that accepts only .fasta files
+ 		 - Uses POST method to send the file to the "/upload" endpoint
+ 		 - Includes multipart/form-data encoding necessary for file uploads
+	- **Conditional display logic**: 
+ 		 - Uses Jinja2 templating to check if a file has been uploaded (`{% if uploaded_file %}`)
+ 		 - If a file exists, displays a link to visualize the parsed data as a DataFrame
+
+- **dataframe.html**: displays the parsed FASTA data in a tabular format:
+	- **Main heading**: "FASTA DataFrame"
+	- **Navigation options**: Provides links to other analytical features:
+ 		 - Statistics visualization ("/stats")
+  		- Motif searching ("/motif")
+  		- Sequence alignment ("/align")
+  		- Return to home page
+	- **Data presentation**:
+ 		- Renders a table with three columns: ID, Description, and Sequence
+  		- Uses Jinja2 loop (`{% for s in data %}`) to iterate through each sequence entry
+  		- Each row represents one sequence from the FASTA file with its metadata
+
+- **stats.html**: provides statistical analysis of the FASTA sequences:
+	- **Table structure**: Displays detailed metrics for each sequence:
+ 		- ID and Description (identifiers from the FASTA file)
+		- Length (number of nucleotides in each sequence)
+		- GC Content (percentage of guanine and cytosine bases, an important genomic characteristic)
+	- **Data rendering**: Uses Jinja2 templating to loop through the "stats" array and populate the table
+	- **Navigation**: Includes links to other analytical features and a way to return to the DataFrame view
+
+- **motifs.html**: enables users to search for conserved sequence patterns (motifs) within the genomic data:
+	- **Search functionality**: Provides two different search forms:
+  		- First form: Allows users to search by sequence index (likely to find motifs within a specific sequence)
+  		- Second form: Enables searching for a specific motif pattern across all sequences
+	- **Results display**:
+  		- For sequence index searches: Shows a single result value (`{{search_motif}}`)
+  		- For motif pattern searches: Renders a list of results (`{% for r in find_motif %}`)
+	- **Form submission**: Both forms use POST method to submit to the "/motif" endpoint
+	- **Navigation**: Links to other analytical features
+
+- **align.html**: provides sequence alignment capabilities:
+	- **User input**: Allows selection of two sequences by their indices for alignment
+	- **Form functionality**: 
+ 		- Uses numeric inputs to specify sequence indices
+  		- Submits to "/align" endpoint using POST method
+	- **Results presentation**: 
+  		- Displays alignment results in a preformatted text block (`<pre>{{ alignment_result }}</pre>`)
+  		- The preformatted tag ensures that spacing and formatting of the alignment is preserved
+	- **Status messaging**: Includes a placeholder for messages (`{{ message }}`)
+	- **Navigation**: Provides links to other analytical features
+
+## Technical Implementation Notes
+1. The application uses server-side templating to dynamically generate HTML
+2. Data is passed from the backend to the templates through variables
+3. The conditional logic ({% if %} statements) adapts the UI based on the current state
+4. The navigation structure shows a well-organized workflow for mitochondrial genome analysis:
+   - Upload → Parse → Visualize → Analyze (through statistics, motif searches, or alignments)
+5. The simple design focuses on functionality rather than aesthetics, suggesting a tool designed for scientific/research purposes
+
+
 ---
-### 5. Procedure di installazione e configurazione e esempio pratico 
+### 6. Procedure di installazione e configurazione e esempio pratico 
 Run the Flask App
 Start the application by running: python app.py
 The app will be accessible at http://127.0.0.1:5000/.
 
 ---
 
-## 6. Conclusions
+## 7. Conclusions
 
 ### Current limitations and future possible improvements of the system:
 - **File format**: The application only supports uploading files in FASTA format, limiting its usability for datasets stored in other common bioinformatics formats (e.g., GenBank or EMBL). This feature can be extended by using the superclass FileParser that we implemented.
