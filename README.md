@@ -188,8 +188,8 @@ def dataframe():
 - Redirects to home if no file has been uploaded (no filepath in session)
 - Parses the uploaded file to generate the DataFrame
 - Iterates through each row, creating MitochondrialDNA objects
-- Constructs a list of dictionaries with sequence information
-- Passes this data to the dataframe template for displaying 
+- Constructs a list of dictionaries with sequence information: ID, description, sequence
+- Passes this data to the dataframe html template for displaying 
 
 **Statistics Route**
 ```python
@@ -210,15 +210,95 @@ def stats():
         })
     return render_template('stats.html', stats=stats)
 ```
-Generates statistical information about the sequences
-Uses the MitochondrialDNA class to calculate:
+- Uses the dataframe and the MitochondrialDNA class to calculate: sequence length and GC content (with two decimal places)
+- Passes the statistics to the stats template for display
 
-Sequence length
-GC content (percentage of guanine and cytosine bases)
+**Motif Analysis Route**
+```python
+@app.route('/motif', methods=['GET', 'POST'])
+def motif():
+    search=None
+    find_motif=None
+    
+    if request.method == 'POST':
+        parser = FastaParser()
+        parser.parse_file(session['filepath'])
+        df = parser.get_DataFrame()
+        motif_analyzer = SequenceMotif(df)
+           
+        motif_input_search = request.form.get("submit_search")
+        motif_input_find = request.form.get('submit_find')
+        
+        search_motif = []
+        if motif_input_search:
+            seq_idx, motif = motif_input_search.split(',')
+            seq = df.iloc[int(seq_idx)]['Sequence']
+            search = motif_analyzer.search_motif(seq, motif)
+            
+        find_motif = []
+        if motif_input_find:
+            results = motif_analyzer.find_motif(motif_input_find)
+            find_motif = results.to_string().split('\n')
+        
+        return render_template('motif.html', search_motif=search, find_motif=find_motif)
 
+    return render_template('motif.html')
+```
+Uses the SequenceMotif class to perform two different types of analysis depending on the type of form data:
+- `Search` operation:
+  - Parses the input to get sequence index and motif
+  - Retrieves the sequence and performs the search
+- `Find` operation:
+  - Searches all sequences for the specified motif
 
-Formats the GC content with two decimal places
-Passes the statistics to the stats template for display
+Formats the results for display
+
+**Sequence Alignment Route**
+```python
+@app.route('/align', methods=['GET', 'POST'])
+def align():
+    if request.method == 'POST':
+        parser = FastaParser()
+        parser.parse_file(session['filepath'])
+        df = parser.get_DataFrame()
+       
+        try:
+            seq1_idx = int(request.form['seq1'])
+            seq2_idx = int(request.form['seq2'])
+           
+            if 0 <= seq1_idx < len(df) and 0 <= seq2_idx < len(df):
+                seq1 = df.iloc[seq1_idx]['Sequence']
+                seq2 = df.iloc[seq2_idx]['Sequence']
+               
+                alignment = SequenceAlignment(seq1, seq2)
+                alignment.perform_alignment()
+                result = alignment.format_alignment()
+                score = alignment.alignments_score()
+               
+                message = f"Alignment Score: {score}"
+                return render_template('align.html', message=message, alignment_result=result)
+            else:
+                return render_template('align.html', message="Invalid sequence indices")
+        except ValueError:
+            return render_template('align.html', message="Please enter valid numbers")
+   
+    return render_template('align.html', message="Enter sequence indices to align")
+```
+- Once received the sequences from the form, implements error handling (if there is an error returns a clear messagge") for:
+	- Invalid numeric inputs
+	- Out-of-range sequence indices
+- Uses the SequenceAlignment class to:
+	- Perform the alignment algorithm
+	- Format the alignment for visualization
+	- Calculate the alignment score
+- Returns the alignment result and score to the template
+
+**Application Execution**
+```python
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+- Runs the Flask application when the script is executed directly and enables debug mode
 
 ## 5 Frontend: HTML strucutre and functionalities
 We focused on a functional simple design rather than an aesthetic one given the scientific/research purposes. The navigation structure is:
