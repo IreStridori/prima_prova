@@ -95,7 +95,7 @@ devi scrivere delle cose su questi poi:
 scrivi cosa fanno
 
 ## 5 HTML strucutre and functionalities
-### - home.html 
+### home.html 
 It is the starting page for the application. Welcomes the user, explains what the tool does and enables the loading of a FASTA file.
 - **Upload**:
   - Contains a form with a file input that accepts only .fasta files
@@ -103,7 +103,7 @@ It is the starting page for the application. Welcomes the user, explains what th
   - Includes `multipart/form-data` encoding necessary for file uploads
   - Checks if a file has been uploaded and displays a link to visualize the parsed data as a DataFrame
 
-### - dataframe.html
+### dataframe.html
 It displays the parsed FASTA data in a tabular format and allows different operations.
 - **Navigation**: Provides links to other possible features:
   - Statistics visualization ("/stats")
@@ -115,7 +115,7 @@ It displays the parsed FASTA data in a tabular format and allows different opera
   - Iterate through each sequence entry
   - Each row represents one sequence from the FASTA file with its metadata
 
-### - stats.html
+### stats.html
 It provides statistical analysis of the FASTA sequences:
 - **Table structure**: Displays detailed metrics for each sequence:
   - ID and Description (identifiers from the FASTA file)
@@ -124,7 +124,7 @@ It provides statistical analysis of the FASTA sequences:
 - **Data rendering**: loops through the "stats" array and populate the table
 - **Navigation**: Includes links to the other possible operations and a way to return to the DataFrame view
 
-### - motifs.html
+### motifs.html
 Enables users to search for conserved sequence patterns (motifs) within the genomic data and provides links to other possible operations.
 - **Search options**: Provides two different search forms (both use POST method to submit to the "/motif" endpoint)
   - First form: Allows users to search by sequence index
@@ -133,17 +133,15 @@ Enables users to search for conserved sequence patterns (motifs) within the geno
   - For sequence index searches: Shows a single result value (`{{search_motif}}`)
   - For motif pattern searches: Renders a list of results (`{% for r in find_motif %}`)
 
-
-- **align.html**: provides sequence alignment capabilities:
-	- **User input**: Allows selection of two sequences by their indices for alignment
-	- **Form functionality**: 
- 		- Uses numeric inputs to specify sequence indices
-  		- Submits to "/align" endpoint using POST method
-	- **Results presentation**: 
-  		- Displays alignment results in a preformatted text block (`<pre>{{ alignment_result }}</pre>`)
-  		- The preformatted tag ensures that spacing and formatting of the alignment is preserved
-	- **Status messaging**: Includes a placeholder for messages (`{{ message }}`)
-	- **Navigation**: Provides links to other analytical features
+### align.html
+Provides sequence alignment capabilities and the link to other possible operations
+- **User input**: Allows selection of two sequences by their indices in the DataFrame for psirwise global alignment
+- **Form**: Uses numeric inputs and submits to "/align" endpoint using `POST` method
+- **Results display**: 
+  - Displays alignment results in a preformatted text block (`<pre>{{ alignment_result }}</pre>`)
+  - The preformatted tag ensures that spacing and formatting of the alignment is preserved
+- **Status messaging**: Includes a placeholder for messages (`{{ message }}`)
+	
 
 ## Technical Implementation Notes
 1. The application uses server-side templating to dynamically generate HTML
