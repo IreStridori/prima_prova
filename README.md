@@ -95,28 +95,22 @@ devi scrivere delle cose su questi poi:
 scrivi cosa fanno
 
 ## 5 HTML strucutre and functionalities
-- **home.html**: starting page for the application:
-	- **Header section**: Declares the document type and includes basic metadata like character encoding
-	- **Title**: "Mitochondrial Genomes Analyzer"
-	- **Description**: Explains that the tool handles FASTA files for mitochondrial DNA analysis
-	- **Upload functionality**: 
+- **home.html**: starting page for the application. Welcomes the user, explains what the tool does and enables the loading of a FASTA file
+	- **Upload**: 
  		 - Contains a form with a file input that accepts only .fasta files
  		 - Uses POST method to send the file to the "/upload" endpoint
  		 - Includes multipart/form-data encoding necessary for file uploads
-	- **Conditional display logic**: 
- 		 - Uses Jinja2 templating to check if a file has been uploaded (`{% if uploaded_file %}`)
- 		 - If a file exists, displays a link to visualize the parsed data as a DataFrame
+ 		 - Checks if a file has been uploaded and displays a link to visualize the parsed data as a DataFrame
 
-- **dataframe.html**: displays the parsed FASTA data in a tabular format:
-	- **Main heading**: "FASTA DataFrame"
-	- **Navigation options**: Provides links to other analytical features:
- 		 - Statistics visualization ("/stats")
+- **dataframe.html**: displays the parsed FASTA data in a tabular format and allows different operations
+	- **Navigation**: Provides links to other possible features:
+ 		- Statistics visualization ("/stats")
   		- Motif searching ("/motif")
-  		- Sequence alignment ("/align")
+  		- Pairwise sequence alignment ("/align")
   		- Return to home page
 	- **Data presentation**:
- 		- Renders a table with three columns: ID, Description, and Sequence
-  		- Uses Jinja2 loop (`{% for s in data %}`) to iterate through each sequence entry
+ 		- Renders a table with three columns: ID, Description and Sequence
+  		- Iterate through each sequence entry
   		- Each row represents one sequence from the FASTA file with its metadata
 
 - **stats.html**: provides statistical analysis of the FASTA sequences:
