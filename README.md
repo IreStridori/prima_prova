@@ -95,6 +95,9 @@ devi scrivere delle cose su questi poi:
 scrivi cosa fanno
 
 ## 5 HTML strucutre and functionalities
+We focused on a functional simple design rather than an aesthetic one given the scientific/research purposes. The navigation structure is:
+**Upload → Parse → Visualize → Analyze (through statistics, motif searches, or alignments)**
+
 ### home.html 
 It is the starting page for the application. Welcomes the user, explains what the tool does and enables the loading of a FASTA file.
 - **Upload**:
@@ -131,7 +134,7 @@ Enables users to search for conserved sequence patterns (motifs) within the geno
   - Second form: Allows users to search by sequence motif, if known
 - **Results display**:
   - For sequence index searches: Shows a single result value (`{{search_motif}}`)
-  - For motif pattern searches: Renders a list of results (`{% for r in find_motif %}`)
+  - For motif pattern searches: Renders a list of sequences of the database in which this motif is present (`{% for r in find_motif %}`)
 
 ### align.html
 Provides sequence alignment capabilities and the link to other possible operations
@@ -140,18 +143,7 @@ Provides sequence alignment capabilities and the link to other possible operatio
 - **Results display**: 
   - Displays alignment results in a preformatted text block (`<pre>{{ alignment_result }}</pre>`)
   - The preformatted tag ensures that spacing and formatting of the alignment is preserved
-- **Status messaging**: Includes a placeholder for messages (`{{ message }}`)
 	
-
-## Technical Implementation Notes
-1. The application uses server-side templating to dynamically generate HTML
-2. Data is passed from the backend to the templates through variables
-3. The conditional logic ({% if %} statements) adapts the UI based on the current state
-4. The navigation structure shows a well-organized workflow for mitochondrial genome analysis:
-   - Upload → Parse → Visualize → Analyze (through statistics, motif searches, or alignments)
-5. The simple design focuses on functionality rather than aesthetics, suggesting a tool designed for scientific/research purposes
-
-
 ---
 ### 6. Procedure di installazione e configurazione e esempio pratico 
 Run the Flask App
