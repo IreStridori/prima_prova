@@ -97,43 +97,42 @@ scrivi cosa fanno
 ## 5 HTML strucutre and functionalities
 ### - home.html 
 It is the starting page for the application. Welcomes the user, explains what the tool does and enables the loading of a FASTA file.
-	- **Upload**: 
- 		 - Contains a form with a file input that accepts only .fasta files
- 		 - Uses `POST` method to send the file to the "/upload" endpoint
- 		 - Includes `multipart/form-data` encoding necessary for file uploads
- 		 - Checks if a file has been uploaded and displays a link to visualize the parsed data as a DataFrame
+- **Upload**:
+  - Contains a form with a file input that accepts only .fasta files
+  - Uses `POST` method to send the file to the "/upload" endpoint
+  - Includes `multipart/form-data` encoding necessary for file uploads
+  - Checks if a file has been uploaded and displays a link to visualize the parsed data as a DataFrame
 
 ### - dataframe.html
 It displays the parsed FASTA data in a tabular format and allows different operations.
-	- **Navigation**: Provides links to other possible features:
- 		- Statistics visualization ("/stats")
-  		- Motif searching ("/motif")
-  		- Pairwise sequence alignment ("/align")
-  		- Return to home page
-	- **Data presentation**:
- 		- Renders a table with three columns: ID, Description and Sequence
-  		- Iterate through each sequence entry
-  		- Each row represents one sequence from the FASTA file with its metadata
+- **Navigation**: Provides links to other possible features:
+  - Statistics visualization ("/stats")
+  -  Motif searching ("/motif")
+  -  Pairwise sequence alignment ("/align")
+  -  Return to home page
+- **Data presentation**:
+  - Renders a table with three columns: ID, Description and Sequence
+  - Iterate through each sequence entry
+  - Each row represents one sequence from the FASTA file with its metadata
 
 ### - stats.html
 It provides statistical analysis of the FASTA sequences:
-	- **Table structure**: Displays detailed metrics for each sequence:
- 		- ID and Description (identifiers from the FASTA file)
-		- Length (number of nucleotides in each sequence)
-		- GC Content (percentage of guanine and cytosine bases, an important genomic characteristic)
-	- **Data rendering**: loops through the "stats" array and populate the table
-	- **Navigation**: Includes links to the other possible operations and a way to return to the DataFrame view
+- **Table structure**: Displays detailed metrics for each sequence:
+  - ID and Description (identifiers from the FASTA file)
+  - Length (number of nucleotides in each sequence)
+  - GC Content (percentage of guanine and cytosine bases, an important genomic characteristic)
+- **Data rendering**: loops through the "stats" array and populate the table
+- **Navigation**: Includes links to the other possible operations and a way to return to the DataFrame view
 
 ### - motifs.html
-Enables users to search for conserved sequence patterns (motifs) within the genomic data
-	- **Search options**: Provides two different search forms:
-  		- First form: Allows users to search by sequence index
-  		- Second form: Allows users to search by sequence motif, if known
-	- **Results display**:
-  		- For sequence index searches: Shows a single result value (`{{search_motif}}`)
-  		- For motif pattern searches: Renders a list of results (`{% for r in find_motif %}`)
-	- **Form submission**: Both forms use POST method to submit to the "/motif" endpoint
-	- **Navigation**: Links to other analytical features
+Enables users to search for conserved sequence patterns (motifs) within the genomic data and provides links to other possible operations.
+- **Search options**: Provides two different search forms (both use POST method to submit to the "/motif" endpoint)
+  - First form: Allows users to search by sequence index
+  - Second form: Allows users to search by sequence motif, if known
+- **Results display**:
+  - For sequence index searches: Shows a single result value (`{{search_motif}}`)
+  - For motif pattern searches: Renders a list of results (`{% for r in find_motif %}`)
+
 
 - **align.html**: provides sequence alignment capabilities:
 	- **User input**: Allows selection of two sequences by their indices for alignment
