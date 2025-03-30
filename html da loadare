@@ -161,7 +161,7 @@ align.html
     <h2>Alignment Result</h2>
     <pre>{{ alignment_result }}</pre>
     {% endif %}
-    <p>Go back to the <a href="/dataframe">statistics page</a>.</p>
+    <p>Go back suca to the <a href="/dataframe">statistics page</a>.</p>
     <p>Go back to the <a href="/">home page</a>.</p>
 </body>
 </html>
