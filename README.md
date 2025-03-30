@@ -299,6 +299,8 @@ if __name__ == '__main__':
     app.run(debug=True)
 ```
 - Runs the Flask application when the script is executed directly and enables debug mode
+  
+---
 
 ## 5 Frontend: HTML strucutre and functionalities
 We focused on a functional simple design rather than an aesthetic one given the scientific/research purposes. The navigation structure is:
@@ -351,14 +353,17 @@ Provides sequence alignment capabilities and the link to other possible operatio
   - The preformatted tag ensures that spacing and formatting of the alignment is preserved
 	
 ---
-### 6. Procedure di installazione e configurazione e esempio pratico 
+## 6. Running procedures
 Run the Flask App
 Start the application by running: python app.py
 The app will be accessible at http://127.0.0.1:5000/.
+![PHOTO-2025-03-11-08-40-14](https://github.com/user-attachments/assets/2ecdc6b2-408a-41e0-b0dd-1ab5fafc3a1a)
 
 ---
+## 7. Examples of expected inputs and outputs
 
-## 7. Conclusions
+---
+## 8. Conclusions
 
 ### Current limitations and future possible improvements of the system:
 - **File format**: The application only supports uploading files in FASTA format, limiting its usability for datasets stored in other common bioinformatics formats (e.g., GenBank or EMBL). This feature can be extended by using the superclass FileParser that we implemented.
