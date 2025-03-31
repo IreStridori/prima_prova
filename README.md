@@ -3,8 +3,8 @@ The project focuses on the development of a software which is capable of reading
  
 ### **Technologies used**
 - Programming Language: Python (Pandas, Biopython and Flask libraries used)
-- Backend: Flask
-- Frontend: HTML
+- Back-end: Flask
+- Front-end: HTML
 
 ---
 
@@ -89,9 +89,100 @@ devi scrivere delle cose su questi poi:
 	- `format_alignment(self, n=1)` formats and returns the **top `n` alignments** in a readable string format.  
 	- Helps visualize how sequences match or differ.  
 	- Returns the **alignment score**, a numerical measure of sequence similarity.
-   
+
 ---
-## 4 Backend: Flask framework functionalities
+
+## 4. Expected inputs and outputs for classes
+MANCANO GLI INPUTS AND OUTPUTS PER GLI INIT DELLE PRIME DUE
+### FileParser 
+`parse_file(self, file)`
+- **Input**: file path.
+- **Output**: None. Abstract method implemented by subclasses to parse file data.
+
+### FastaParser
+`ensure_data_loaded(func)`
+MANCA è UN DECORATOR NON SO SE DEVO METTERLI
+
+`parse_file(self, file)`
+- **Input**: file path
+- **Output**: None. It stores the data in the instance's `self._data` protected attribute as a DataFrame.
+
+`get_DataFrame(self)`
+- **Input**: no inputs.
+- **Output**: Pandas DataFrame stored in `self._data` 
+
+`get_summary(self)`
+- **Input**: no inputs.
+- **Output**: summary DataFrame (using pandas' `describe()` method). Raises an error if no data is loaded.
+
+`get_seq(self, index)`
+- **Input**: integer index representing a row in the DataFrame.
+- **Output**: list containing Identifier, Description, and Sequence for the specified row index. Raises an error if the index is out of bounds.
+
+### GenomicEntity
+`__init__(self, sequence, identifier=None, description=None)`
+- **Input**: sequence string, optional identifier and description strings. SONO TUTTE STRINGS O ALCUNI INTEGERS?
+- **Output**: BOH CHAT DICE A NEW GENOMIC ENTITY INSTANCE MA NON SO 
+
+`get_attributes_value(self)`
+- **Input**: no inputs.
+- **Output**: tuple of (identifier, description, sequence). TUPLE O NO? CONTROLLA IL TYPE
+
+`length(self)`
+- **Input**: no inputs.
+- **Output**: integer length of the sequence.
+
+### MitochondrialDNA
+`gc_content(self)`
+- **Input**: no inputs.
+- **Output**: float number representing GC content of the sequence.
+
+`extract_subseq_by_indexing(self, start, end)`
+- **Input**: two integers representing the start and end indices.
+- **Output**: substring of the sequence from start to end included.
+
+### MotifAnalyser
+`__init__(self, data)`
+- **Input**: DataFrame
+- **Output**: a new MotifAnalyser instance? STESSO DISCORSO DI PRIMA
+
+`find_motif(self, motif)`
+- **Input**: string of a motif.
+- **Output**: None. Abstract method implemented by subclasses.
+
+### SequenceMotif
+`extract_motifs(self, sequence, motif_length, minimum)`
+- **Input**: string sequence to analyze, integer length of motifs to extract, integer treshold of occurrences for a motif to be included.
+- **Output**: pandas DataFrame with motifs, indices and occurrences.
+
+`search_motif(sequence, motif)` 
+- **Input**: string sequence to search in, string motif to search for.
+- **Output**: list of integer positions where the motif was found.
+
+`find_motif(self, motif)`
+- **Input**: string motif to search for.
+- **Output**: pandas DataFrame with columns Identifier, Motif and Occurrences, showing how many times the motif appears in each sequence in the dataset.
+
+### SequenceAlignment
+`__init__(self, seq1, seq2)`
+- **Input**: two sequence strings to align.
+- **Output**: a new SequenceAlignment instance. STESSA ROBA
+
+`perform_alignment(self)`
+- **Input**: no inputs.
+- **Output**: returns the alignment results from the PairwiseAligner module.
+
+`format_alignment(self, n=1)`
+- **Input**: optional integer specifying how many alignments to format.
+- **Output**: string representation of the first n alignment results.
+
+`alignments_score(self)`
+- **Input**: no inputs.
+- **Output**: float score representing the quality of the alignment.
+
+---
+
+## 5 Back-end: Flask framework functionalities
 ### Setup and imports
 ```python
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -302,7 +393,7 @@ if __name__ == '__main__':
   
 ---
 
-## 5 Frontend: HTML strucutre and functionalities
+## 6 Front-end: HTML strucutre and functionalities
 We focused on a functional simple design rather than an aesthetic one given the scientific/research purposes. The navigation structure is:
 **Upload → Parse → Visualize → Analyze (through statistics, motif searches, or alignments)**
 
@@ -353,101 +444,15 @@ Provides sequence alignment capabilities and the link to other possible operatio
   - The preformatted tag ensures that spacing and formatting of the alignment is preserved
 	
 ---
-## 6. Running procedures
+
+## 7. Running procedures
 Run the Flask App
 Start the application by running: python app.py
 The app will be accessible at http://127.0.0.1:5000/.
 ![PHOTO-2025-03-11-08-40-14](https://github.com/user-attachments/assets/2ecdc6b2-408a-41e0-b0dd-1ab5fafc3a1a)
 
 ---
-## 7. Expected inputs and outputs for classes
-MANCANO GLI INPUTS AND OUTPUTS PER GLI INIT DELLE PRIME DUE
-### FileParser 
-`parse_file(self, file)`
-- **Input**: file path.
-- **Output**: None. Abstract method implemented by subclasses to parse file data.
 
-### FastaParser
-`ensure_data_loaded(func)`
-MANCA è UN DECORATOR NON SO SE DEVO METTERLI
-
-`parse_file(self, file)`
-- **Input**: file path
-- **Output**: None. It stores the data in the instance's `self._data` protected attribute as a DataFrame.
-
-`get_DataFrame(self)`
-- **Input**: no inputs.
-- **Output**: Pandas DataFrame stored in `self._data` 
-
-`get_summary(self)`
-- **Input**: no inputs.
-- **Output**: summary DataFrame (using pandas' `describe()` method). Raises an error if no data is loaded.
-
-`get_seq(self, index)`
-- **Input**: integer index representing a row in the DataFrame.
-- **Output**: list containing Identifier, Description, and Sequence for the specified row index. Raises an error if the index is out of bounds.
-
-### GenomicEntity
-`__init__(self, sequence, identifier=None, description=None)`
-- **Input**: sequence string, optional identifier and description strings. SONO TUTTE STRINGS O ALCUNI INTEGERS?
-- **Output**: BOH CHAT DICE A NEW GENOMIC ENTITY INSTANCE MA NON SO 
-
-`get_attributes_value(self)`
-- **Input**: no inputs.
-- **Output**: tuple of (identifier, description, sequence). TUPLE O NO? CONTROLLA IL TYPE
-
-`length(self)`
-- **Input**: no inputs.
-- **Output**: integer length of the sequence.
-
-### MitochondrialDNA
-`gc_content(self)`
-- **Input**: no inputs.
-- **Output**: float number representing GC content of the sequence.
-
-`extract_subseq_by_indexing(self, start, end)`
-- **Input**: two integers representing the start and end indices.
-- **Output**: substring of the sequence from start to end included.
-
-### MotifAnalyser
-`__init__(self, data)`
-- **Input**: DataFrame
-- **Output**: a new MotifAnalyser instance? STESSO DISCORSO DI PRIMA
-
-`find_motif(self, motif)`
-- **Input**: string of a motif.
-- **Output**: None. Abstract method implemented by subclasses.
-
-### SequenceMotif
-`extract_motifs(self, sequence, motif_length, minimum)`
-- **Input**: string sequence to analyze, integer length of motifs to extract, integer treshold of occurrences for a motif to be included.
-- **Output**: pandas DataFrame with motifs, indices and occurrences.
-
-`search_motif(sequence, motif)` 
-- **Input**: string sequence to search in, string motif to search for.
-- **Output**: list of integer positions where the motif was found.
-
-`find_motif(self, motif)`
-- **Input**: string motif to search for.
-- **Output**: pandas DataFrame with columns Identifier, Motif and Occurrences, showing how many times the motif appears in each sequence in the dataset.
-
-### SequenceAlignment
-`__init__(self, seq1, seq2)`
-- **Input**: Two sequence strings to align.
-- **Output**: A new SequenceAlignment instance.
-
-`perform_alignment(self)`
-- **Input**: No inputs.
-- **Output**: Returns the alignment results from the PairwiseAligner.
-
-`format_alignment(self, n=1)`
-- **Input**: An optional integer `n` specifying how many alignments to format.
-- **Output**: Returns a string representation of the first n alignment results.
-
-`alignments_score(self)`
-- **Input**: No inputs.
-- **Output**: Returns a float score representing the quality of the alignment.
----
 ## 8. Conclusions
 
 ### Current limitations and future possible improvements of the system:
