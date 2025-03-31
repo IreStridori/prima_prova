@@ -1,4 +1,4 @@
-### **1. Introduction**
+## **1. Introduction**
 The project focuses on the development of a software which is capable of reading and structuring a FASTA file and perform different analysis on mitochondrial DNA sequences from multiple species, while providing to the user an interacting, user-friendly, Web Interface. The project also relies on scalability, so that the possibility to expand it in the future is concrete.
  
 ### **Technologies used**
