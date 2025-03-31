@@ -30,33 +30,23 @@ immagini UML e crc
 
 ### 3.2 Class FastaParser (Concrete Subclass of DataParser)  
 - **Purpose**: Implements specific parsing for FASTA files and organizes the files's genomic data in a structured table with an identifier, a description and an associated sequence. It implements the `parse(self, file_path)` method from FileParser.
-  n
+
 - **Specific responsibilities**:
 	- Reads a FASTA file line by line.
  	- Organizes the different file's objects into a dictionary with three keys:  
 		- **ID**: The sequence identifier (e.g., _NC_012920.1_).  
 		- **Description**: The description of the organism (e.g., _Homo sapiens mitochondrion, complete genome_).
 		- **Sequence**: The nucleotide sequence itself (e.g., _GATCACAGGT..._).  
-	- Converts the dictionary into a Pandas DataFrame for better organization and management.  
+	- Converts the dictionary into a Pandas DataFrame for better organization and management and returns it
+ 	- Gives out summary of the dataset via a specific method `describe`
+  	- Returns a specific sequence of the DataFrame and its details 
 
-- **Error management**: The class uses an `ensure_data_loaded` decorator which verifies if a file was uploaded by the user. In case it was not, it raises an error, informs the user with a specific message and halts the session.
+- **Error management**: The class uses an `ensure_data_loaded` decorator which verifies if a file was uploaded by the user. In case it was not, it raises an error, informs the user with a specific message and halts the session. This decorator is used in two methods which require the uploaded data to properly function.
 
-devi scrivere delle cose su questi poi:
-@staticmethod
+DEVO DECIDERE CHE SCRIVERE DI STATIC METHOD, PERCHE L'ABBIAMO MESSO
+@staticmethod ABBINATO AL DECORATOR ENSURE DATA LOADED
 
- @ensure_data_loaded #se i dati non sono stati caricati non verrà eseguito.
-    def get_summary(self):
-        """describe(include="all") restituisce un riepilogo del dataset.: numero di valori unici per ogni colonna, frequenza degli identificatori, lunghezza media delle sequenze"""
-        return self._data.describe(include="all")
 
-    @ensure_data_loaded #aggiunto
-    def get_seq(self, index):
-        """Restituisce la sequenza e i dettagli della riga indicata."""
-        if index >= len(self._data) or index < 0:
-            raise IndexError(f"Indice {index} fuori dai limiti).")
-        seq = self._data.iloc[index].tolist()
-        return seq
-  
 ### 3.3 Class GenomicEntity (Concrete Superclass)
 - **Purpose**: Models a generic genomic sequence by setting common attributes (identifier, description, sequence) and provides a common method for sequence length calculation.
 
