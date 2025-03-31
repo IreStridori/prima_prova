@@ -107,11 +107,24 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
     # Conta le occorrenze di ciascun motivo (usa Counter() di collections). Filtra i motivi che compaiono più di minimum volte. Restituisce un DataFrame con i motivi e la loro frequenza.
     
     def extract_motifs(self, sequence, motif_length, minimum):
-        motifs = [sequence[i:i + motif_length] for i in range(len(sequence) - motif_length + 1)]
-        motif_counts = dict(Counter(motifs))
-        recurrent_motifs = {motif: count for motif, count in motif_counts.items() if count >= minimum}
-        motifs_df = pd.DataFrame(list(recurrent_motifs.items()), columns=["motif", "count"]).set_index("motif")
+        motifs=[]
+        motifs_dic={}
+        for i in range(len(sequence) - motif_length + 1):
+            motif=sequence[i:i + motif_length]
+            if motif in motifs_dic:
+                motifs_dic[motif].append(i)
+            else:
+                motifs_dic[motif]=[i] #so that then the frequency should be just the length of the list of initial indexes
+        md=motifs_dic.copy() #otherwise it changes size while itinerating if we itinerate over the original
+        for k, v in md.items():
+            if len(v)<= minimum:
+                del motifs_dic[k]
+            else:
+                motifs.append([k, v])
+        motifs_df=pd.DataFrame(motifs, columns=['Motif', 'Indexes'])
+                
         return motifs_df
+
 
     def search_motif(sequence, motif):
     positions = []
