@@ -100,8 +100,9 @@ MANCANO GLI INPUTS AND OUTPUTS PER GLI INIT DELLE PRIME DUE
 - **Output**: None. Abstract method implemented by subclasses to parse file data.
 
 ### FastaParser
-`ensure_data_loaded(func)`
-MANCA è UN DECORATOR NON SO SE DEVO METTERLI
+`ensure_data_loaded(func)` (decorator)
+- **Input**: function/method that requires data to be loaded before execution.
+- **Output**: decorated version of the input function that checks `self._data` before executing. If `self._data` is `None`, it raises a ValueError with a message. If data is loaded, it proceeds to execute the original function with all its arguments.
 
 `parse_file(self, file)`
 - **Input**: file path
