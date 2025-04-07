@@ -8,7 +8,7 @@ class FileParser(ABC):
         self._data = None
         
     @abstractmethod
-    def parse_file(self, file):
+    def parse_file(self, file:str):
         pass
 
 
@@ -51,24 +51,34 @@ class FastaParser:
         self._data = pd.DataFrame(sequences, columns=["Identifier", "Description", "Sequence"])
 
     """Restituisce il DataFrame contenente i dati FASTA."""
-    def get_DataFrame(self):
+    def get_DataFrame(self)->pd.DataFrame:
         return self._data
 
     @ensure_data_loaded #se i dati non sono stati caricati non verrà eseguito.
-    def get_summary(self):
+    def get_summary(self)-> pd.DataFrame:
         """describe(include="all") restituisce un riepilogo del dataset.: numero di valori unici per ogni colonna, frequenza degli identificatori, lunghezza media delle sequenze"""
         return self._data.describe(include="all")
 
     @ensure_data_loaded #aggiunto
-    def get_seq(self, index):
+    def get_seq(self, index: int)-> pd.DataFrame:
         """Restituisce la sequenza e i dettagli della riga indicata."""
         if index >= len(self._data) or index < 0:
             raise IndexError(f"Indice {index} fuori dai limiti).")
         seq = self._data.iloc[index].tolist()
-        return seq
+        return seq #it's the whole row
+
+parser = FastaParser()
+parsed_file=parser.parse_file('file.fasta')
+df=parser.get_DataFrame()
+summary_file=parser.get_summary()
+sequence=parser.get_row(1)
+
+
+
+
 # superclasse per sequenze
 class GenomicEntity(ABC):
-    def __init__(self,sequence, identifier=None, description=None):
+    def __init__(self,sequence: str, identifier=None, description=None):
         self._identifier = identifier #protected così che puoi accedere da mithochondrial dna
         self._description = description
         self._sequence = sequence
@@ -76,7 +86,7 @@ class GenomicEntity(ABC):
     def get_attributes_value(self):
         return self._identifier, self._description, self._sequence
 
-    def length(self):
+    def length(self) -> int:
         return len(self._sequence)
 
 
@@ -89,12 +99,18 @@ class MitochondrialDNA(GenomicEntity):
         c_count = self._sequence.count("C")
         return (g_count + c_count) / len(self._sequence) * 100
 
-    def extract_subseq_by_indexing(self, start, end):
+    def extract_subseq_by_indexing(self, start: int, end: int) -> str:
         return self._sequence[start:end + 1]
-    
+
+dna=MitochondrialDNA(*sequence)
+dna_attributes=dna.get_attributes_value()
+
+
+
+
 #CLASSE ASTRATTA PERCHè POTREI NON VOLER LAVORARE CON UN DATA FRAME MA CON UNA STRINGA, O QUALSIASI COSA, QUINDI FACCIAMO IN MODO CHE IL NOSTRO SIA UN CASO PARTICOLARE
 class MotifAnalyser(ABC):
-    def __init__(self, data):
+    def __init__(self, data: pd.DataFrame):
         self._data = data #nel nostro caso il dato sarà il dataframe
 
     @abstractmethod
@@ -106,7 +122,7 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
     #Estrae tutte le subsequenze di lunghezza motif_length dalla sequence e restituisce una lista di motivi.
     # Conta le occorrenze di ciascun motivo (usa Counter() di collections). Filtra i motivi che compaiono più di minimum volte. Restituisce un DataFrame con i motivi e la loro frequenza.
     
-    def extract_motifs(self, sequence, motif_length, minimum):
+    def extract_motifs(self, sequence: str, motif_length: int, minimum: int) -> pd.DataFrame:
         motifs=[]
         motifs_dic={}
         for i in range(len(sequence) - motif_length + 1):
@@ -125,8 +141,9 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
                 
         return motifs_df
 
-
-    def search_motif(sequence, motif):
+--------------------------
+SE NON USIAMO POSSIAMO ELIMINARLO
+    def search_motif(self, sequence:str, motif:str):
     positions = []
     index = sequence.find(motif)  # Trova la prima occorrenza
     
@@ -135,9 +152,9 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
         index = sequence.find(motif, index + 1)  # Cerca la prossima occorrenza
     #Cerca un motivo genetico specifico in tutte le sequenze del dataframe e ti dice quante volte l'ha trovato per ogni sequenza
         return positions
+----------------------------
 
-
-    def find_motif(self, motif):
+    def find_motif(self, motif:str) -> pd.DataFrame:
         motif = motif.upper()
         results = []
         for _, row in self._data.iterrows(): #!!!index
@@ -147,14 +164,14 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
     
 # Classe per l'allineamento
 class SequenceAlignment:
-    def __init__(self, seq1, seq2): #Inizializza l'oggetto di allineamento con due sequenze.
+    def __init__(self, seq1:str, seq2:str): #Inizializza l'oggetto di allineamento con due sequenze.
         self.__seq1 = seq1
         self.__seq2 = seq2
         self.__aligner = PairwiseAligner()
         self.__aligner.mode = 'global'  # Imposta l'allineamento globale di default
         self.__alignments = None # Variabile per memorizzare i risultati dell'allineamento
 
-    def perform_alignment(self): #esegue l'allineamento
+    def perform_alignment(self)-> Alignment: #esegue l'allineamento
         self.__alignments = self.__aligner.align(self.__seq1, self.__seq2)
         return self.__alignments
 
@@ -164,5 +181,5 @@ class SequenceAlignment:
             results.append(str(alignment))
         return "\n".join(results)
 
-    def alignments_score(self): #Questa funzione restituisce il punteggio dell'allineamento (ovvero la qualità dell'allineamento stesso), che è una misura di quanto siano simili le due sequenze.
+    def alignments_score(self) -> float: #Questa funzione restituisce il punteggio dell'allineamento (ovvero la qualità dell'allineamento stesso), che è una misura di quanto siano simili le due sequenze.
         return self.__alignments.score
