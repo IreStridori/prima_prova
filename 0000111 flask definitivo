@@ -49,6 +49,9 @@ def upload_file():
         return redirect(url_for('home'))
 #non si può render_template in una route per un'altra route , si può solo essere redirectati  
     
+
+
+
 @app.route('/dataframe', methods=['GET', 'POST'])
 def dataframe():
     if 'filepath' not in session:
@@ -58,13 +61,15 @@ def dataframe():
     parser.parse_file(session['filepath'])
     df = parser.get_DataFrame()
     data = []
-    for _, row in df.iterrows():
-        mito_dna = MitochondrialDNA(row['Identifier'], row['Description'], row['Sequence'])
-        data.append({
-            'ID': row['Identifier'],
-            'Description': row['Description'],
-            'Sequence': row['Sequence']
-        })
+    for i in range(len(df)):
+        row=parser.get_row(i)
+        mito_dna=MitochondrialDNA(*row)
+        mito_attributes=mito_dna.get_attributes_value()
+        identifier, description, sequence=mito_attributes
+        data.append({ 'ID': identifier,
+                'Description': description,
+                'Sequence': sequence})
+
     return render_template('dataframe.html', data=data)
 
 
@@ -75,17 +80,19 @@ def stats():
     # Calcola le statistiche
     df = parser.get_DataFrame()
     stats = []
-    for _, row in df.iterrows():
-        mito_dna = MitochondrialDNA(row['Identifier'], row['Description'], row['Sequence'])
-        stats.append({
-            'ID': row['Identifier'],
-            'Description': row['Description'],
-            'Length': mito_dna.length(),
-            'GC Content': f"{mito_dna.gc_content():.2f}%"
+    for i in range(len(df)):
+        row=parser.get_row(i)
+        mito_dna=MitochondrialDNA(*row)
+        mito_attributes=mito_dna.get_attributes_value()
+        identifier, description, sequence=mito_attributes
+        stats.append({ 'ID': identifier,
+                'Description': description,
+                'Length': mito_dna.length(),
+                'GC Content': f"{mito_dna.gc_content():.2f}%"
         })
     return render_template('stats.html', stats=stats)
-    #return render_template('stats.html')
-#return redirect(request.url)
+
+
 
 @app.route('/motif', methods=['GET', 'POST'])
 def motif():
