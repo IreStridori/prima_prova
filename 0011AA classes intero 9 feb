@@ -104,7 +104,7 @@ class MitochondrialDNA(GenomicEntity):
 
 dna=MitochondrialDNA(*sequence)
 dna_attributes=dna.get_attributes_value()
-
+dna_gc=dna.gc_content()
 
 
 
