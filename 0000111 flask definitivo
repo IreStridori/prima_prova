@@ -62,7 +62,7 @@ def dataframe():
     df = parser.get_DataFrame()
     data = []
     for i in range(len(df)):
-        row=parser.get_row(i)
+        row=parser.get_seq(i)
         mito_dna=MitochondrialDNA(*row)
         mito_attributes=mito_dna.get_attributes_value()
         identifier, description, sequence=mito_attributes
@@ -81,7 +81,7 @@ def stats():
     df = parser.get_DataFrame()
     stats = []
     for i in range(len(df)):
-        row=parser.get_row(i)
+        row=parser.get_seq(i)
         mito_dna=MitochondrialDNA(*row)
         mito_attributes=mito_dna.get_attributes_value()
         identifier, description, sequence=mito_attributes
