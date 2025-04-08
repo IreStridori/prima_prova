@@ -109,19 +109,19 @@ def motif():
         motif_input_search = request.form.get("submit_search")
         motif_input_find = request.form.get('submit_find')
         
-        search_motif = []
+       search_motif = []
         if motif_input_search:
             if motif_input_search:
                 seq_idx, motif_length, minimum = map(int, motif_input_search.split(','))
-                seq = df.iloc[seq_idx]['Sequence']
-                extraction= motif_analyzer.extract_motifs(seq, motif_length, minimum)
+                extraction= motif_analyzer.extract_motifs(seq_idx, motif_length, minimum)
             for _, row in extraction.iterrows():
                 search_motif.append({
             'Motif': row['Motif'],
             'Indexes': row['Indexes'],
             'Repetitions': len(row['Indexes']),
         })
-            
+
+
         find_motif = []
         if motif_input_find:
             results = motif_analyzer.find_motif(motif_input_find)
