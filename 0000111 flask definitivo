@@ -90,6 +90,14 @@ def stats():
                 'Length': mito_dna.length(),
                 'GC Content': f"{mito_dna.gc_content():.2f}%"
         })
+
+    subseq=None
+    if request.method == 'POST':
+        if submit_indexes:
+            seq_idx, start, end=map(int, submit_indexes.split(','))
+            mito_DNA= MitochondrialDNA(*df.iloc[seq_idx])
+            subseq=mito_DNA.extract_subseq_by_indexing(start, end)
+
     return render_template('stats.html', stats=stats)
 
 
