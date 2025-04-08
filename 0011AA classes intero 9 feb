@@ -122,9 +122,10 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
     #Estrae tutte le subsequenze di lunghezza motif_length dalla sequence e restituisce una lista di motivi.
     # Conta le occorrenze di ciascun motivo (usa Counter() di collections). Filtra i motivi che compaiono più di minimum volte. Restituisce un DataFrame con i motivi e la loro frequenza.
     
-    def extract_motifs(self, sequence: str, motif_length: int, minimum: int) -> pd.DataFrame:
+    def extract_motifs(self, seq_idx, motif_length, minimum):
         motifs=[]
         motifs_dic={}
+        sequence= df.iloc[seq_idx]['Sequence']
         for i in range(len(sequence) - motif_length + 1):
             motif=sequence[i:i + motif_length]
             if motif in motifs_dic:
