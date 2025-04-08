@@ -166,7 +166,7 @@ align.html
 
     {% if alignment_result %}
     <h2>Alignment Result</h2>
-    <pre>{{ alignment_result }}</pre>
+    <pre style="font-family: 'Courier New', monospace;"> {{ alignment_result }}</pre>
     {% endif %}
     <p>Go back to the <a href="/dataframe">statistics page</a>.</p>
     <p>Go to the <a href="/motif">motif page</a>.</p>
