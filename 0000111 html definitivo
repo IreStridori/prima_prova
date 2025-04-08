@@ -85,6 +85,19 @@ stats.html
         </tr>
         {% endfor %}
     </table>
+    
+
+    <p> if you want to extract a subsequences using indexes </p>
+    <form action="/stats" method="POST">
+        <input type="text" name="submit_indexes" placeholder="Enter sequence indexes">
+        <button type="submit" name="action" value="submit"> Submit</button>
+    </form>
+
+
+    {% if subseq%}
+	<p> {{ subseq }} </p>
+
+    {% endif %}
 
     <p> Would you like to do some more operations with your sequences? </p>
     <a href="/motif">Search Motif</a> | <a href="/align">Align Sequences</a>
