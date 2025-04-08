@@ -60,7 +60,7 @@ class FastaParser:
         return self._data.describe(include="all")
 
     @ensure_data_loaded #aggiunto
-    def get_seq(self, index: int)-> pd.DataFrame:
+    def get_seq(self, index: int)-> list:
         """Restituisce la sequenza e i dettagli della riga indicata."""
         if index >= len(self._data) or index < 0:
             raise IndexError(f"Indice {index} fuori dai limiti).")
@@ -83,7 +83,7 @@ class GenomicEntity(ABC):
         self._description = description
         self._sequence = sequence
 
-    def get_attributes_value(self):
+    def get_attributes_value(self) -> tuple:
         return self._identifier, self._description, self._sequence
 
     def length(self) -> int:
@@ -93,7 +93,7 @@ class GenomicEntity(ABC):
 # Classe per rappresentare il DNA mitocondriale
 class MitochondrialDNA(GenomicEntity):
 
-    def gc_content(self):
+    def gc_content(self) -> float:
         """Calcola il contenuto GC della sequenza."""
         g_count = self._sequence.count("G")
         c_count = self._sequence.count("C")
