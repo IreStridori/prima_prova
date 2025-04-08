@@ -142,19 +142,6 @@ class SequenceMotif(MotifAnalyser): #inerita init da superclasse
                 
         return motifs_df
 
---------------------------
-SE NON USIAMO POSSIAMO ELIMINARLO
-    def search_motif(self, sequence:str, motif:str):
-    positions = []
-    index = sequence.find(motif)  # Trova la prima occorrenza
-    
-    while index != -1:
-        positions.append(index)
-        index = sequence.find(motif, index + 1)  # Cerca la prossima occorrenza
-    #Cerca un motivo genetico specifico in tutte le sequenze del dataframe e ti dice quante volte l'ha trovato per ogni sequenza
-        return positions
-----------------------------
-
     def find_motif(self, motif:str) -> pd.DataFrame:
         motif = motif.upper()
         results = []
