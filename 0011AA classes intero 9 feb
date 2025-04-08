@@ -161,7 +161,21 @@ SE NON USIAMO POSSIAMO ELIMINARLO
             count = row["Sequence"].count(motif)
             results.append((row["Identifier"], motif, count))
         return pd.DataFrame(results, columns=["Identifier", "Motif", "Occurrences"])
-    
+
+motif_analyzer = SequenceMotif(df)
+
+seq_idx=1
+motif_length=4
+minimum=6
+extraction=motif_analyzer.extract_motifs(seq_idx, motif_length, minimum)
+
+motif_input_find='ATGGT'
+found_motif = motif_analyzer.find_motif(motif_input_find)
+
+
+
+
+
 # Classe per l'allineamento
 class SequenceAlignment:
     def __init__(self, seq1:str, seq2:str): #Inizializza l'oggetto di allineamento con due sequenze.
@@ -171,11 +185,11 @@ class SequenceAlignment:
         self.__aligner.mode = 'global'  # Imposta l'allineamento globale di default
         self.__alignments = None # Variabile per memorizzare i risultati dell'allineamento
 
-    def perform_alignment(self)-> Alignment: #esegue l'allineamento
+    def perform_alignment(self)-> Bio.Align.PairwiseAlignments: #esegue l'allineamento
         self.__alignments = self.__aligner.align(self.__seq1, self.__seq2)
         return self.__alignments
 
-    def format_alignment(self, n=1): #Formatta e restituisce i primi N risultati di allineamento
+    def format_alignment(self, n=1) -> str: #Formatta e restituisce i primi N risultati di allineamento
         results = []
         for alignment in self.__alignments[n]:
             results.append(str(alignment))
@@ -183,3 +197,10 @@ class SequenceAlignment:
 
     def alignments_score(self) -> float: #Questa funzione restituisce il punteggio dell'allineamento (ovvero la qualità dell'allineamento stesso), che è una misura di quanto siano simili le due sequenze.
         return self.__alignments.score
+
+
+seq1='ATGGT'
+seq2='ATGT'
+alignment = SequenceAlignment(seq1, seq2)
+result = alignment.format_alignment()
+score = alignment.alignments_score()
