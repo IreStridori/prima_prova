@@ -173,7 +173,7 @@ class SequenceAlignment:
         self.__aligner.mode = 'global'  # Imposta l'allineamento globale di default
         self.__alignments = None # Variabile per memorizzare i risultati dell'allineamento
 
-    def perform_alignment(self)-> Bio.Align.PairwiseAlignments: #esegue l'allineamento
+    def perform_alignment(self): #esegue l'allineamento
         self.__alignments = self.__aligner.align(self.__seq1, self.__seq2)
         return self.__alignments
 
