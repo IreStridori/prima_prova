@@ -90,7 +90,7 @@ The things you should have in your folder when running the Web interface
 ---
 
 ## 4. Expected inputs and outputs for classes
-MANCANO GLI INPUTS AND OUTPUTS PER GLI INIT DELLE PRIME DUE
+
 ### FileParser 
 `parse_file(self, file)`
 - **Input**: file path.
@@ -118,13 +118,9 @@ MANCANO GLI INPUTS AND OUTPUTS PER GLI INIT DELLE PRIME DUE
 - **Output**: list containing Identifier, Description, and Sequence for the specified row index. Raises an error if the index is out of bounds.
 
 ### GenomicEntity
-`__init__(self, sequence, identifier=None, description=None)`
-- **Input**: sequence string, optional identifier and description strings. SONO TUTTE STRINGS O ALCUNI INTEGERS?
-- **Output**: BOH CHAT DICE A NEW GENOMIC ENTITY INSTANCE MA NON SO 
-
 `get_attributes_value(self)`
 - **Input**: no inputs.
-- **Output**: tuple of (identifier, description, sequence). TUPLE O NO? CONTROLLA IL TYPE
+- **Output**: tuple of identifier, description, sequence.
 
 `length(self)`
 - **Input**: no inputs.
@@ -140,10 +136,6 @@ MANCANO GLI INPUTS AND OUTPUTS PER GLI INIT DELLE PRIME DUE
 - **Output**: substring of the sequence from start to end included.
 
 ### MotifAnalyser
-`__init__(self, data)`
-- **Input**: DataFrame
-- **Output**: a new MotifAnalyser instance? STESSO DISCORSO DI PRIMA
-
 `find_motif(self, motif)`
 - **Input**: string of a motif.
 - **Output**: None. Abstract method implemented by subclasses.
@@ -162,10 +154,6 @@ MANCANO GLI INPUTS AND OUTPUTS PER GLI INIT DELLE PRIME DUE
 - **Output**: pandas DataFrame with columns Identifier, Motif and Occurrences, showing how many times the motif appears in each sequence in the dataset.
 
 ### SequenceAlignment
-`__init__(self, seq1, seq2)`
-- **Input**: two sequence strings to align.
-- **Output**: a new SequenceAlignment instance. STESSA ROBA
-
 `perform_alignment(self)`
 - **Input**: no inputs.
 - **Output**: returns the alignment results from the PairwiseAligner module.
