@@ -23,6 +23,8 @@ The things you should have in your folder when running the Web interface
 	--| app.py
 	--| classes.py
 	--| uploads/
+ 	--| _pycache_/
+  	--| file.FASTA
 	--| templates/
 		--| home.html
 		--| dataframe.html
@@ -75,7 +77,7 @@ The things you should have in your folder when running the Web interface
 		- **Number of occurrences** per sequence  
 
 ### 3.7 Sequence Alignment (Concrete Class)
-- **Purpose**: using Biopython’s `PairwiseAligner` module, it manages to handle robust pairwise sequence alignment. It compares two sequences and calculates their similarity, producing a structured alignment output.  
+- **Purpose**: using Biopython’s `PairwiseAligner` module, it manages to handle pairwise sequence alignment. It compares two sequences and calculates their similarity, producing a structured alignment output.  
 - **Methods and responsibilities**:
 	- Initializes the alignment object with **two input sequences (`seq1`, `seq2`)**.  
 	- Uses **global alignment mode** by default.  
