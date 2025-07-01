@@ -424,15 +424,15 @@ Enables users to search for conserved sequence patterns (motifs) within the geno
   - First form: Allows users to search by sequence index
   - Second form: Allows users to search by sequence motif, if known
 - **Results display**:
-  - For sequence index searches: Shows a Pandas Dataframe with 3 columns: motif, number of occurrences and offsets at which it was found (`{{search_motif}}`)
-  - For motif pattern searches: Renders a list of sequences of the database in which this motif is present and how many times(`{% for r in find_motif %}`)
+  - For sequence index searches: Shows a Pandas Dataframe with 3 columns: motif, number of occurrences and offsets at which it was found
+  - For motif pattern searches: Renders a list of sequences of the database in which this motif is present and how many times
 
 ### align.html
 Provides sequence alignment capabilities and the link to other possible operations
 - **User input**: Allows selection of two sequences by their indices in the DataFrame for pairwise global alignment
 - **Form**: Uses numeric inputs and submits to "/align" endpoint using `POST` method
 - **Results display**: 
-  - Displays alignment results in a preformatted text block (`<pre>{{ alignment_result }}</pre>`)
+  - Displays alignment results in a preformatted text block
   - The preformatted tag ensures that spacing and formatting of the alignment is preserved
 	
 ---
