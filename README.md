@@ -452,7 +452,7 @@ The app will be accessible at http://127.0.0.1:5000/.
 - **Basic error handling**: For example, the system may not adequately handle malformed FASTA files or unexpected user inputs, which can lead to uninformative error messages or crashes.
 - **Session-Based file storage**: The use of Flask sessions to store the file path is simple but not ideal for multi-user environments or larger datasets.
 - **Limited analysis**: the software is focused on basic sequence statistics (length and GC content), motif search, and pairwise alignment. More advanced analyses, such as phylogenetic tree construction or structural predictions, are not supported. This can be improved by integrating additional bioinformatics tools and algorithms, such as for BLAST searches or multiple sequence alignments.
-- **User Interface with static visualization**: The web interface is functional but basic. There is limited visualization for sequence alignments, motif occurrences, and other analytical results. Using CSS and JavaScript we could upgrade the web interface with interactive visualizations (e.g., graphical displays of alignments) to facilitate data interpretation.
+- **User Interface with static visualization**: The web interface is functional but basic. There is limited visualization for sequence alignments, motif occurrences, and other analytical results. Using JavaScript we could upgrade the web interface with interactive visualizations (e.g., graphical displays of alignments) to facilitate data interpretation.
 
 ### Lessons we learned during the project:
 - **Modular Design is Crucial**: Organizing the application into distinct classes helped maintain the code easier to manage, understand and extend.
