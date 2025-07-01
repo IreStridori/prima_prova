@@ -416,7 +416,7 @@ It provides statistical analysis of the FASTA sequences:
   - Length (number of nucleotides in each sequence)
   - GC Content (percentage of guanine and cytosine bases, an important genomic characteristic)
 - **Data rendering**: loops through the "stats" array and populate the table
-- **Navigation**: Includes links to the other possible operations and a way to return to the DataFrame view
+- **Navigation**: Includes links to the other possible operations 
 
 ### motifs.html
 Enables users to search for conserved sequence patterns (motifs) within the genomic data and provides links to other possible operations.
@@ -424,12 +424,12 @@ Enables users to search for conserved sequence patterns (motifs) within the geno
   - First form: Allows users to search by sequence index
   - Second form: Allows users to search by sequence motif, if known
 - **Results display**:
-  - For sequence index searches: Shows a single result value (`{{search_motif}}`)
-  - For motif pattern searches: Renders a list of sequences of the database in which this motif is present (`{% for r in find_motif %}`)
+  - For sequence index searches: Shows a Pandas Dataframe with 3 columns: motif, number of occurrences and offsets at which it was found (`{{search_motif}}`)
+  - For motif pattern searches: Renders a list of sequences of the database in which this motif is present and how many times(`{% for r in find_motif %}`)
 
 ### align.html
 Provides sequence alignment capabilities and the link to other possible operations
-- **User input**: Allows selection of two sequences by their indices in the DataFrame for psirwise global alignment
+- **User input**: Allows selection of two sequences by their indices in the DataFrame for pairwise global alignment
 - **Form**: Uses numeric inputs and submits to "/align" endpoint using `POST` method
 - **Results display**: 
   - Displays alignment results in a preformatted text block (`<pre>{{ alignment_result }}</pre>`)
