@@ -19,6 +19,7 @@ In this repository you will find these files:
 
 ### **Web Interface structure**
 The things you should have in your folder when running the Web interface 
+
 	--| app.py
 	--| classes.py
 	--| uploads/
