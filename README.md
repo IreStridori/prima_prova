@@ -155,8 +155,6 @@ seq_idx=1
 motif_length=4
 minimum=6
 extraction=motif_analyzer.extract_motifs(seq_idx, motif_length, minimum)
-#print(extraction)
-print(type(extraction))
 motif_input_find='ATGGT'
 found_motif = motif_analyzer.find_motif(motif_input_find)
 ```
