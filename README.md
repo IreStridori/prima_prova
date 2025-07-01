@@ -28,6 +28,7 @@ The things you should have in your folder when running the Web interface
 	 	--| stats.html
 	  	--| motif.html
 	   	--| align.html
+     
 
 ---
 
