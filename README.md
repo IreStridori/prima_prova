@@ -9,18 +9,25 @@ The project focuses on the development of a software which is capable of reading
 ---
 
 ## **2. System design**
-### **System architecture and interactions**
-immagini UML e crc 
+In this repository you will find these files:
+- classes.py <!-- python file with the code containing algorithms and database handling part -->
+- app.py <!-- Flask file containing the back-end code -->
+- UMLdiagrams.pdf
+- CRCcards.xlsx
+- 5 html files <!-- to be saved in a single folder "templates" -->
+- example.FASTA <!-- Example file we used for testing the Web interface --> 
 
 ### **Web Interface structure**
+The things you should have in your folder when running the Web interface 
 	--| app.py
+	--| classes.py
 	--| uploads/
 	--| templates/
-		--| index.html
-		--| upload.html
+		--| home.html
+		--| dataframe.html
 	 	--| stats.html
 	  	--| motif.html
-	   	--| allign.html
+	   	--| align.html
 
 ---
 
