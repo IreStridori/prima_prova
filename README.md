@@ -35,10 +35,10 @@ The things you should have in your folder when running the Web interface
 
 ## 3. Implementation: classes used and their responsibilities
 ### 3.1 Class FileParser (Abstract Superclass)
-- **Purpose**: Provides an reusable structure for parsing different types of files. The only method it has is `parse(self, file_path)`, an abstract method for reading and processing data from a file path. The superclass ensures a that all subclasses implement the parse method.  
+- **Purpose**: Provides an reusable structure for parsing different types of files. The only method it has is `parse_file(self, file)`, an abstract method for reading and processing data from a file path. The superclass ensures a that all subclasses implement the parse method.  
 
 ### 3.2 Class FastaParser (Concrete Subclass of DataParser)  
-- **Purpose**: Implements specific parsing for FASTA files and organizes the files's genomic data in a structured table with an identifier, a description and an associated sequence. It implements the `parse(self, file_path)` method from FileParser.
+- **Purpose**: Implements specific parsing for FASTA files and organizes the files's genomic data in a structured table with an identifier, a description and an associated sequence. It implements the `parse_file(self, file)` method from FileParser.
 
 - **Specific responsibilities**:
 	- Reads a FASTA file line by line.
@@ -52,17 +52,13 @@ The things you should have in your folder when running the Web interface
 
 - **Error management**: The class uses an `ensure_data_loaded` decorator which verifies if a file was uploaded by the user. In case it was not, it raises an error, informs the user with a specific message and halts the session. This decorator is used in two methods which require the uploaded data to properly function.
 
-DEVO DECIDERE CHE SCRIVERE DI STATIC METHOD, PERCHE L'ABBIAMO MESSO
-@staticmethod ABBINATO AL DECORATOR ENSURE DATA LOADED
-
-
 ### 3.3 Class GenomicEntity (Concrete Superclass)
 - **Purpose**: Models a generic genomic sequence by setting common attributes (identifier, description, sequence) and provides a common method for sequence length calculation.
 
 ### 3.4 Class MitochondrialDNA (Subclass of GenomicEntity) 
    - **Purpose**: Extends `GenomicEntity` to add specific functionalities for DNA sequences.  
    - **Specific responsibilities**:
-     	- Extract a subsequence by putting a start and an end index as inputs
+     	- Extract a subsequence by taking as input parameters a start and an end index
      	- GC content analysis of a sequence
 
 ### 3.5 Class MotifAnalyser (Abstract Class)
@@ -71,9 +67,9 @@ DEVO DECIDERE CHE SCRIVERE DI STATIC METHOD, PERCHE L'ABBIAMO MESSO
 ### 3.6 Class SequenceMotif (Concrete Subclass of MotifAnalyser)  
    - **Purpose**: extends `MotifAnalyser` and is responsible for identifying recurrent genetic patterns that may be biologically significant. It allows the use to insert as input a precise or not subsequence and it extracts it. It also provides insights into their frequency and occurrence across multiple sequences.  
    - **Methods**: 2 different ways of analysing a motif were implemented.
-     - `extract_motifs(self, sequence, motif_length, minimum)`: if the user does not have a specific motif to search this method extracts all possible subsequences of length `motif_length` from the given `sequence` which repeats at least `minimum` times. Uses `Counter()` from the `collections` module to count motif occurrences. Returns a Pandas DataFrame with motif counts.
+     - `extract_motifs(self, seq_idx, motif_length, minimum)`: if the user does not have a specific motif to search, this method extracts all possible subsequences of length `motif_length` from the given `seq_idx` which repeats at least `minimum` times. Returns a Pandas DataFrame with motif counts.
        
-     - `find_motif(self, motif)`: if the user has a specific genetic motif, this searches the subsequence across all sequences in the dataset. Returns a Pandas DataFrame listing:
+     - `find_motif(self, motif)`: if the user has a specific generic motif, this searches the subsequence across all sequences in the dataset. Returns a Pandas DataFrame listing:
 		- **Motif** searched 
  		- Sequence **Identifier**   
 		- **Number of occurrences** per sequence  
