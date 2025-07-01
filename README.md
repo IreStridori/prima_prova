@@ -141,13 +141,9 @@ The things you should have in your folder when running the Web interface
 - **Output**: None. Abstract method implemented by subclasses.
 
 ### SequenceMotif
-`extract_motifs(self, sequence, motif_length, minimum)`
+`extract_motifs(self, seq_idx, motif_length, minimum)`
 - **Input**: string sequence to analyze, integer length of motifs to extract, integer treshold of occurrences for a motif to be included.
 - **Output**: pandas DataFrame with motifs, indices and occurrences.
-
-`search_motif(sequence, motif)` 
-- **Input**: string sequence to search in, string motif to search for.
-- **Output**: list of integer positions where the motif was found.
 
 `find_motif(self, motif)`
 - **Input**: string motif to search for.
