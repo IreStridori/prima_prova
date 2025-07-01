@@ -149,6 +149,15 @@ The things you should have in your folder when running the Web interface
 - **Input**: string motif to search for.
 - **Output**: pandas DataFrame with columns Identifier, Motif and Occurrences, showing how many times the motif appears in each sequence in the dataset.
 
+Example:
+motif_analyzer = SequenceMotif(df)
+seq_idx=1
+motif_length=4
+minimum=6
+extraction=motif_analyzer.extract_motifs(seq_idx, motif_length, minimum)
+motif_input_find='ATGGT'
+found_motif = motif_analyzer.find_motif(motif_input_find)
+
 ### SequenceAlignment
 `perform_alignment(self)`
 - **Input**: no inputs.
