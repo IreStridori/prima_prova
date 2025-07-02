@@ -10,12 +10,13 @@ The project focuses on the development of a software which is capable of reading
 
 ## **2. System design**
 In this repository you will find these files:
-- `classes.py`  ← Python file with the algorithms and database handling
-- `app.py`      ← Flask backend
-- `UMLdiagrams.pdf`  ← UML diagrams
-- `CRCcards.xlsx`    ← Class-Responsibility-Collaborator cards
-- 5 html files       ← HTML templates for the web interface
-- `example.FASTA`    ← Example FASTA file for testing
+- `CRCcards.xlsx`    <- Class-Responsibility-Collaborator cards
+- `README.md` 	<- project documentation
+- `UMLdiagram.pdf`	<- UML diagram
+- `classes.py`  <- Python file with the algorithms and database handling
+- `app.py`      <- Flask backend
+- 5 html files       <- HTML templates for the web interface
+- `example.FASTA`    <- Example FASTA file for testing
 
 ### **Web Interface structure**
 The things you should have in your folder when running the Web interface 
@@ -113,9 +114,17 @@ The things you should have in your folder when running the Web interface
 - **Input**: no inputs.
 - **Output**: summary DataFrame (using pandas' `describe()` method). Raises an error if no data is loaded.
 
-`get_seq(self, index)`
+`get_row(self, index)`
 - **Input**: integer index representing a row in the DataFrame.
 - **Output**: list containing Identifier, Description, and Sequence for the specified row index. Raises an error if the index is out of bounds.
+
+```python
+parser = FastaParser()
+parsed_file=parser.parse_file('file.fasta')
+df=parser.get_DataFrame()
+summary_file=parser.get_summary()
+sequence=parser.get_row(1)
+```
 
 ### GenomicEntity
 `get_attributes_value(self)`
@@ -134,6 +143,14 @@ The things you should have in your folder when running the Web interface
 `extract_subseq_by_indexing(self, start, end)`
 - **Input**: two integers representing the start and end indices.
 - **Output**: substring of the sequence from start to end included.
+
+```python
+dna=MitochondrialDNA(*sequence)
+dna_attributes=dna.get_attributes_value()
+dna_gc=dna.gc_content()
+seq_idx=1
+DNA=MitochondrialDNA(*df.iloc[seq_idx])
+```
 
 ### MotifAnalyser
 `find_motif(self, motif)`
@@ -172,6 +189,14 @@ found_motif = motif_analyzer.find_motif(motif_input_find)
 - **Input**: no inputs.
 - **Output**: float score representing the quality of the alignment.
 
+```python
+seq1='ATGGT'
+seq2='ATGT'
+alignment = SequenceAlignment(seq1, seq2)
+alignment_performed=alignment.perform_alignment()
+result = alignment.format_alignment()
+score = alignment.alignments_score()
+```
 ---
 
 ## 5 Back-end: Flask framework functionalities
