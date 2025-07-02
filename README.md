@@ -159,7 +159,7 @@ DNA=MitochondrialDNA(*df.iloc[seq_idx])
 
 ### SequenceMotif
 `extract_motifs(self, seq_idx, motif_length, minimum)`
-- **Input**: string sequence to analyze, integer length of motifs to extract, integer treshold of occurrences for a motif to be included.
+- **Input**: integer zero-based index of the sequence to analyze, integer length of motifs to extract, integer treshold of occurrences for a motif to be included.
 - **Output**: pandas DataFrame with motifs, indices and occurrences.
 
 `find_motif(self, motif)`
