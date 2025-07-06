@@ -463,12 +463,13 @@ Provides sequence alignment capabilities and the link to other possible operatio
 ---
 
 ## 7. Running procedures
-Install all the required [modules].
-Copy the path to your [cartella] containing the app.py script.
-On the [robo nero] write cd "copy the path to the [cartella]".
-Then now you can write flask run or app.py to run the Flask App.
-The app will be accessible at http://127.0.0.1:5000/.
-![PHOTO-2025-03-11-08-40-14](https://github.com/user-attachments/assets/2ecdc6b2-408a-41e0-b0dd-1ab5fafc3a1a)
+Here are the commands to run the project from the terminal of your computer:
+	1.	Install the dependencies. Use: `pip install dependency_name` to install the required libraries (flask, pandas, python3, biopython are needed).
+	2.	Navigate to the project folder. Use the cd command to move into the directory containing your project files: `cd path_to_directory`
+	3.	Run the Flask app with: `python3 app.py`
+
+By default, the web app will be available at localhost:5000.
+If you encounter issues (e.g. the app is slow to start), it’s possible that port 5000 is already in use. In that case, try running the app on a different port using: `flask run --port=8080`
 
 ---
 
