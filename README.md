@@ -463,8 +463,10 @@ Provides sequence alignment capabilities and the link to other possible operatio
 ---
 
 ## 7. Running procedures
-Run the Flask App
-Start the application by running: python app.py
+Install all the required [modules].
+Copy the path to your [cartella] containing the app.py script.
+On the [robo nero] write cd "copy the path to the [cartella]".
+Then now you can write flask run or app.py to run the Flask App.
 The app will be accessible at http://127.0.0.1:5000/.
 ![PHOTO-2025-03-11-08-40-14](https://github.com/user-attachments/assets/2ecdc6b2-408a-41e0-b0dd-1ab5fafc3a1a)
 
