@@ -464,9 +464,9 @@ Provides sequence alignment capabilities and the link to other possible operatio
 
 ## 7. Running procedures
 Here are the commands to run the project from the terminal of your computer:
-	1.	Install the dependencies. Use: `pip install dependency_name` to install the required libraries (flask, pandas, python3, biopython are needed).
-	2.	Navigate to the project folder. Use the cd command to move into the directory containing your project files: `cd path_to_directory`
-	3.	Run the Flask app with: `python3 app.py`
+-  Install the dependencies. Use: `pip install dependency_name` to install the required libraries (flask, pandas, python3, biopython are needed).
+-  Navigate to the project folder. Use the cd command to move into the directory containing your project files: `cd path_to_directory`
+-  Run the Flask app with: `python3 app.py`
 
 By default, the web app will be available at localhost:5000.
 If you encounter issues (e.g. the app is slow to start), it’s possible that port 5000 is already in use. In that case, try running the app on a different port using: `flask run --port=8080`
