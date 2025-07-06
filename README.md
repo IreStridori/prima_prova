@@ -16,7 +16,7 @@ In this repository you will find these files:
 - `classes.py`  <- Python file with the algorithms and database handling
 - `app.py`      <- Flask backend
 - 5 html files       <- HTML templates for the web interface
-- `example.FASTA`    <- Example FASTA file for testing
+- `file.fasta`    <- Example FASTA file for testing
 
 ### **Web Interface structure**
 The things you should have in your folder when running the Web interface 
